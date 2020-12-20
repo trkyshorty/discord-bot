@@ -32,16 +32,16 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "lint-staged": "^10.4.0",
     "eslint": "^7.10.0",
     "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.22.1",
     "eslint-config-prettier": "^6.12.0",
+    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-security": "^1.4.0",
+    "husky": "^4.3.6",
+    "lint-staged": "^10.4.0",
     "nodemon": "^2.0.4",
     "prettier": "^2.1.2",
-    "husky": "^4.3.6",
     "prettier-plugin-jsdoc": "^0.2.0"
   }
 }
