@@ -41,6 +41,7 @@
     "eslint-plugin-security": "^1.4.0",
     "nodemon": "^2.0.4",
     "prettier": "^2.1.2",
+    "husky": "^4.3.6",
     "prettier-plugin-jsdoc": "^0.2.0"
   }
 }
