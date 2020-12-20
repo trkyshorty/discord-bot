@@ -1,0 +1,6 @@
+version: '3'
+
+services:
+  discord-bot:
+    container_name: discord-bot-dev
+    command: npm run start:dev

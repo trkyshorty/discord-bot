@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  discord-bot:
+    build: .
+    image: discord-bot
+    environment:
+      - MONGODB_URL=mongodb://mongodb:27017/discord-bot
+    ports:
+      - '3000:3000'
+    depends_on:
+      - lavalink
+      - mongodb
+    volumes:
+      - .:/usr/src/discord-bot
+      - /usr/src/discord-bot/node_modules
+    networks:
+      - node-network
+
+  mongodb:
+    image: mongo:4.4.1-bionic
+    ports:
+      - '27017:27017'
+    volumes:
+      - dbdata:/data/db
+    networks:
+      - node-network
+
+  lavalink:
+    image: fredboat/lavalink:19972c2c
+    ports:
+      - '2333:2333'
+    volumes:
+      - .:/opt/Lavalink
+    networks:
+      - node-network
+
+volumes:
+  dbdata:
+
+networks:
+  node-network:
+    driver: bridge
