@@ -17,6 +17,7 @@
 - **Git hooks**: with [husky](https://github.com/typicode/husky) and [lint-staged](https://github.com/okonet/lint-staged)
 - **Linting**: with [ESLint](https://eslint.org) and [Prettier](https://prettier.io)
 - **Editor config**: consistent editor configuration using [EditorConfig](https://editorconfig.org)
+- **Dependency management**: with [Yarn](https://yarnpkg.com)
 
 ## Bot Features
 
@@ -24,5 +25,3 @@
 - **Ranking**: Experience points are earned based on chat and this determines the ranking (!highscore, !rank)
 - **Moderation**: Moderation features (!ban, !mute, !purge, !unban, !unmute)
 - **Information**: For now it has only one feature (!avatar)
-
-
