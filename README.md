@@ -1,4 +1,4 @@
-# Elym2 DiscordJS Bot
+# Elym2 Discordjs Bot
 
 ## Table of Contents
 
