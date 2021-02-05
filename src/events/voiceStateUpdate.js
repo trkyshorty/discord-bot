@@ -41,6 +41,19 @@ class VoiceStateUpdateEvent extends Event {
         await this.client.manager.leave(oldState.guild.id);
       }
     }
+
+    /** Leave if there is no one but the music bot on the voice channel */
+    if (oldChannel && oldChannel.id === oldState.guild.me.voice.channel.id) {
+      if (!oldChannel.members.size - 1) {
+        setTimeout(async () => {
+          if (!oldChannel.members.size - 1) {
+            this.client.user.setActivity(`👀 |`, { type: 'WATCHING' });
+            this.client.queue.delete(oldState.guild.id);
+            await this.client.manager.leave(oldState.guild.id);
+          }
+        }, 60000);
+      }
+    }
   }
 }
 
