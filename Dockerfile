@@ -9,9 +9,11 @@ WORKDIR /usr/src/discord-bot
 
 COPY package.json /usr/src/discord-bot
 
+RUN rm -rf /usr/src/discord-bot/node_modules
+
 USER root
 
-RUN npm install
+RUN yarn install
 
 COPY --chown=root:root . .
 
