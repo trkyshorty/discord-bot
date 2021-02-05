@@ -3,4 +3,4 @@ version: '3'
 services:
   discord-bot:
     container_name: discord-bot-prod
-    command: npm run start
+    command: yarn start
