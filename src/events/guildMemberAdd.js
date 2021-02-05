@@ -20,6 +20,8 @@ class GuildMemberAddEvent extends Event {
       const moderationPlugin = guildDoc.plugins.moderation;
 
       if (moderationPlugin && moderationPlugin.enable) {
+        const moderationLogChannel = this.client.channels.cache.get(moderationPlugin.log_channel);
+
         const memberAddLog = new MessageEmbed()
           .setColor('#008000')
           .setAuthor(`${member.user.username}`, `${member.user.displayAvatarURL({ format: 'png', size: 2048 })}`)
@@ -27,7 +29,7 @@ class GuildMemberAddEvent extends Event {
           .setDescription(`${member.user} az önce sunucuya giriş yaptı`)
           .setTimestamp();
 
-        member.guild.systemChannel.send(memberAddLog).catch((err) => this.logger.warn(err));
+        moderationLogChannel.send(memberAddLog).catch((err) => this.logger.warn(err));
       }
     });
   }
