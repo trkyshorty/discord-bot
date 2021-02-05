@@ -92,7 +92,6 @@ class PlayCommand extends Command {
 
     this.getSongs(`${searchString}`).then(async (songs) => {
       if (!songs || !songs[0]) {
-        this.client.queue.delete(message.guild.id);
         return message.reply(this.messageEmbeed(`${search} bulunamadı`, '#FF0000')).catch(console.error);
       }
 

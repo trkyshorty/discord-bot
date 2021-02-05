@@ -1,4 +1,5 @@
 const { registerFont, createCanvas, loadImage } = require('canvas');
+const { fillTextWithTwemoji } = require('node-canvas-with-twemoji-and-discord-emoji');
 const path = require('path');
 const { MessageAttachment } = require('discord.js');
 const { Command } = require('../../system');
@@ -56,7 +57,7 @@ class RankCommand extends Command {
 
         ctx.font = '32pt Discord';
         ctx.fillStyle = '#ffffff';
-        ctx.fillText(guildMember.displayName, canvas.width / 4.0, canvas.height / 2.8);
+        await fillTextWithTwemoji(ctx, guildMember.displayName, canvas.width / 4.0, canvas.height / 2.8);
 
         ctx.font = '28pt Discord';
         ctx.fillStyle = '#ffffff';
