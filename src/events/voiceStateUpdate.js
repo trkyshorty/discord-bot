@@ -43,7 +43,7 @@ class VoiceStateUpdateEvent extends Event {
     }
 
     /** Leave if there is no one but the music bot on the voice channel */
-    if (oldChannel && oldChannel.id === oldState.guild.me.voice.channel.id) {
+    if (oldChannel && oldState.guild.me.voice.channel && oldChannel.id === oldState.guild.me.voice.channel.id) {
       if (!oldChannel.members.size - 1) {
         setTimeout(async () => {
           if (!oldChannel.members.size - 1) {
