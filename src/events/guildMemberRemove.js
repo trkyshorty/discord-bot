@@ -8,14 +8,16 @@ class GuildMemberRemoveEvent extends Event {
       const moderationPlugin = guildDoc.plugins.moderation;
 
       if (moderationPlugin && moderationPlugin.enable) {
+        const moderationLogChannel = this.client.channels.cache.get(moderationPlugin.log_channel);
+
         const memberRemoveLog = new MessageEmbed()
           .setColor('#FF0000')
           .setAuthor(`${member.user.username}`, `${member.user.displayAvatarURL({ format: 'png', size: 2048 })}`)
           .setThumbnail(`${member.user.displayAvatarURL({ format: 'png', size: 2048 })}`)
-          .setDescription(`${member.user} az önce sunucudan çıkış yaptı`)
+          .setDescription(`${member.user} az önce sunucudan ayrıldı`)
           .setTimestamp();
 
-        member.guild.systemChannel.send(memberRemoveLog).catch((err) => this.logger.warn(err));
+        moderationLogChannel.send(memberRemoveLog).catch((err) => this.logger.warn(err));
       }
     });
   }

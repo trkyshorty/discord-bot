@@ -112,6 +112,7 @@ class PlayCommand extends Command {
             channel: message.member.voice.channelID,
             node: '1',
           }),
+          listeners: 0,
         };
 
         this.client.queue.set(message.guild.id, queueContruct);
