@@ -25,6 +25,11 @@ class VoiceStateUpdateEvent extends Event {
           if (!oldChannel && newChannel) {
             voiceStateUpdateLog.setDescription(`:microphone2: ${member.user} **${newChannel}** odasına giriş yaptı`);
             moderationLogChannel.send(voiceStateUpdateLog).catch((err) => this.logger.warn(err));
+          } else if (oldChannel && newChannel) {
+            voiceStateUpdateLog.setDescription(
+              `:microphone2: ${member.user} **${oldChannel}** odasından **${newChannel}** odasına geçiş yaptı`
+            );
+            moderationLogChannel.send(voiceStateUpdateLog).catch((err) => this.logger.warn(err));
           } else if (!newChannel) {
             voiceStateUpdateLog.setDescription(`:microphone2: ${member.user} **${oldChannel}** odasından çıkış yaptı`);
             moderationLogChannel.send(voiceStateUpdateLog).catch((err) => this.logger.warn(err));
@@ -43,14 +48,27 @@ class VoiceStateUpdateEvent extends Event {
     }
 
     /** Leave if there is no one but the music bot on the voice channel */
-    if (oldChannel && oldState.guild.me.voice.channel && oldChannel.id === oldState.guild.me.voice.channel.id) {
-      if (!oldChannel.members.size - 1) {
+    if (!oldChannel && newChannel) {
+      if (newState.guild.me.voice.channel && newChannel.id === newState.guild.me.voice.channel.id) {
+        const musicPlayerQueue = this.client.queue.get(newState.guild.id);
+        musicPlayerQueue.listeners = newState.guild.me.voice.channel.members.size;
+        this.client.queue.set(newState.guild.id, musicPlayerQueue);
+
+        /** TODO: resume the music player if there is nobody in the voice channel */
+      }
+    } else if (!newChannel) {
+      if (oldState.guild.me.voice.channel && oldChannel.id === oldState.guild.me.voice.channel.id) {
+        const musicPlayerQueue = this.client.queue.get(oldState.guild.id);
+        musicPlayerQueue.listeners = oldState.guild.me.voice.channel.members.size;
+        this.client.queue.set(oldState.guild.id, musicPlayerQueue);
+
+        /** TODO: pause the music player if there is nobody in the voice channel */
+
         setTimeout(async () => {
-          if (!oldChannel.members.size - 1) {
-            this.client.user.setActivity(`👀 |`, { type: 'WATCHING' });
-            this.client.queue.delete(oldState.guild.id);
-            await this.client.manager.leave(oldState.guild.id);
-          }
+          if (musicPlayerQueue.listeners > 1) return;
+          this.client.user.setActivity(`👀 |`, { type: 'WATCHING' });
+          this.client.queue.delete(oldState.guild.id);
+          await this.client.manager.leave(oldState.guild.id);
         }, 60000);
       }
     }
