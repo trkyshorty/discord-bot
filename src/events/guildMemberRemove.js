@@ -14,7 +14,7 @@ class GuildMemberRemoveEvent extends Event {
           .setColor('#FF0000')
           .setAuthor(`${member.user.username}`, `${member.user.displayAvatarURL({ format: 'png', size: 2048 })}`)
           .setThumbnail(`${member.user.displayAvatarURL({ format: 'png', size: 2048 })}`)
-          .setDescription(`${member.user} az önce sunucudan çıkış yaptı`)
+          .setDescription(`${member.user} az önce sunucudan ayrıldı`)
           .setTimestamp();
 
         moderationLogChannel.send(memberRemoveLog).catch((err) => this.logger.warn(err));
