@@ -72,7 +72,7 @@ class PlayCommand extends Command {
     this.client.user.setActivity(`🎵 | ${song.info.title}`, { type: 'WATCHING' });
 
     serverQueue.textChannel.send(
-      this.messageEmbeed(`🎵 Çalınıyor [${song.info.title}](${song.info.uri}) [ ${song.requested} ]`, '#00FF00')
+      this.messageEmbeed(`🎵 Çalıyor [${song.info.title}](${song.info.uri}) [ ${song.requested} ]`, '#00FF00')
     );
   }
 
@@ -123,7 +123,7 @@ class PlayCommand extends Command {
         serverQueue.textChannel
           .send(
             this.messageEmbeed(
-              `🎵 Sıraya alındı [${songs[0].info.title}](${songs[0].info.uri}) [ ${songs[0].requested} ]`,
+              `🎵 Sırada [${songs[0].info.title}](${songs[0].info.uri}) [ ${songs[0].requested} ]`,
               '#00FF00'
             )
           )
