@@ -102,7 +102,7 @@ class Bot extends Client {
       setInterval(async () => {
         this.emit('banTimeout');
         this.emit('muteTimeout');
-      }, 10 * 1000);
+      }, 60 * 1000); // run event every 60 seconds for timeouts
     } catch (err) {
       this.logger.error(err.message);
     }
