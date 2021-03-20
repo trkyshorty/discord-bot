@@ -98,6 +98,11 @@ class Bot extends Client {
             this.logger.error(err.message);
           });
       }, 7000);
+
+      setInterval(async () => {
+        this.emit('banTimeout');
+        this.emit('muteTimeout');
+      }, 10 * 1000);
     } catch (err) {
       this.logger.error(err.message);
     }
