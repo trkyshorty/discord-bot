@@ -26,12 +26,6 @@ class BanTimeoutEvent extends Event {
                 this.logger.info(`Ban Timeout: ${user.user_id}`);
               });
           }
-
-          await models.GuildMember.findOneAndUpdate(
-            { guild_id: user.guild_id, user_id: user.user_id },
-            { $set: { banned_at: null } },
-            { setDefaultsOnInsert: true, upsert: true, new: true }
-          );
         });
       });
     });
