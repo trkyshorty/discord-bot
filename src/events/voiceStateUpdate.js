@@ -5,6 +5,10 @@ class VoiceStateUpdateEvent extends Event {
   async run(oldState, newState) {
     const oldChannel = oldState.channel;
     const newChannel = newState.channel;
+
+    /** When the microphone is turned off and on, it prevents a room change log from occurring. */
+    if (oldChannel === newChannel) return;
+
     const member = oldState.guild.members.cache.get(oldState.id);
 
     const { models } = this.client.database;
