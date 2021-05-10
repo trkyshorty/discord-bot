@@ -37,19 +37,19 @@ class UnMuteCommand extends Command {
             permissions: [],
           },
         });
-
-        message.guild.channels.cache.forEach(async (channel) => {
-          await channel.createOverwrite(muteRole, {
-            SEND_MESSAGES: false,
-            MANAGE_MESSAGES: false,
-            READ_MESSAGES: false,
-            ADD_REACTIONS: false,
-          });
-        });
       } catch (e) {
         console.log(e.stack);
       }
     }
+
+    message.guild.channels.cache.forEach(async (channel) => {
+      await channel.createOverwrite(muteRole, {
+        SEND_MESSAGES: false,
+        MANAGE_MESSAGES: false,
+        READ_MESSAGES: false,
+        ADD_REACTIONS: false,
+      });
+    });
 
     const embed = new MessageEmbed()
       .setAuthor(this.client.user.username, this.client.user.displayAvatarURL({ format: 'png', size: 2048 }))
