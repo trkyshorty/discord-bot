@@ -125,7 +125,7 @@ class Bot extends Client {
   registerEvents() {
     this.logger.info('Loading events');
     const items = [];
-    items.push(...glob.sync(`${path.join(__dirname, '../events')}/*.js`));
+    items.push(...glob.sync(`${path.join(__dirname, '../events')}/**/*.js`));
     items.forEach((item) => {
       if (require.cache[require.resolve(item)]) delete require.cache[require.resolve(item)];
 

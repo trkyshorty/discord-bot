@@ -50,14 +50,6 @@ class BanCommand extends Command {
           reason: argReason,
         })
         .then(async () => {
-          const { models } = this.client.database;
-
-          await models.GuildMember.findOneAndUpdate(
-            { guild_id: member.guild.id, user_id: member.user.id },
-            { $set: { banned_at: Date.now() } },
-            { setDefaultsOnInsert: true, upsert: true, new: true }
-          );
-
           embed.setDescription(`${member.user} sunucudan atıldı`).addField('İşlem Nedeni', argReason);
           return message.channel.send({ embed });
         });
