@@ -16,6 +16,7 @@ class MuteTimeoutEvent extends Event {
         const guild = this.client.guilds.cache.get(user.guild_id);
 
         let muteRole = guild.roles.cache.find((val) => val.name === 'Susturuldu');
+
         if (!muteRole) {
           try {
             muteRole = await guild.roles.create({
@@ -39,19 +40,19 @@ class MuteTimeoutEvent extends Event {
           });
         });
 
-        guild.members.fetch(user.user_id).then((member) => {
-          member.roles
-            .remove(muteRole)
-            .then(async () => {
-              await models.GuildMember.findOneAndUpdate(
-                { guild_id: member.guild.id, user_id: member.user.id },
-                { $set: { muted_at: null } },
-                { setDefaultsOnInsert: true, upsert: true, new: true }
-              );
-              this.logger.info(`Mute Timeout: ${user.user_id}`);
-            })
-            .catch((err) => console.error(err));
-        });
+        let member = guild.members.cache.get(user.user_id);
+        if (!member) return;
+
+        member.roles
+          .remove(muteRole)
+          .then(async () => {
+            await models.GuildMember.findOneAndUpdate(
+              { guild_id: member.guild.id, user_id: member.user.id },
+              { $set: { muted_at: null } },
+              { setDefaultsOnInsert: true, upsert: true, new: true }
+            );
+            this.logger.info(`Mute Timeout: ${user.user_id}`);
+          })
       });
     });
   }
