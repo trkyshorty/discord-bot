@@ -1,4 +1,4 @@
-const { Event } = require('../system');
+const { Event } = require('../../system');
 
 class MuteTimeoutEvent extends Event {
   run() {
@@ -25,19 +25,19 @@ class MuteTimeoutEvent extends Event {
                 permissions: [],
               },
             });
-
-            guild.channels.cache.forEach(async (channel) => {
-              await channel.createOverwrite(muteRole, {
-                SEND_MESSAGES: false,
-                MANAGE_MESSAGES: false,
-                READ_MESSAGES: false,
-                ADD_REACTIONS: false,
-              });
-            });
           } catch (e) {
             console.log(e.stack);
           }
         }
+
+        guild.channels.cache.forEach(async (channel) => {
+          await channel.createOverwrite(muteRole, {
+            SEND_MESSAGES: false,
+            MANAGE_MESSAGES: false,
+            READ_MESSAGES: false,
+            ADD_REACTIONS: false,
+          });
+        });
 
         guild.members.fetch(user.user_id).then((member) => {
           member.roles
