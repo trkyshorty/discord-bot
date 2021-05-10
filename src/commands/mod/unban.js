@@ -48,14 +48,6 @@ class UnBanCommand extends Command {
           reason: argReason,
         })
         .then(async () => {
-          const { models } = this.client.database;
-
-          await models.GuildMember.findOneAndUpdate(
-            { guild_id: member.guild.id, user_id: member.user.id },
-            { $set: { banned_at: null } },
-            { setDefaultsOnInsert: true, upsert: true, new: true }
-          );
-
           embed.setDescription(`${member.user} cezası sonlandırıldı`).addField('İşlem Nedeni', argReason);
           return message.channel.send({ embed });
         });
