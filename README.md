@@ -33,6 +33,7 @@
 ## Requirements
 
 - Docker
+- Java
 
 ## Server Configuration
 
