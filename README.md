@@ -1,6 +1,4 @@
-# Elym2 Discordjs Bot
-
-[![Dependency Badge](https://david-dm.org/trkyshorty/elym2-discordjs-bot/status.svg)](https://david-dm.org/trkyshorty/elym2-discordjs-bot)
+# Discord Bot
 
 ## Table of Contents
 
