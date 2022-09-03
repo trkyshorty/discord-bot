@@ -1,6 +1,4 @@
-# Discord Bot
-
-- I haven't found a name for it yet, I'll think about it later.
+# Zimbo
 
 ## Table of Contents
 
