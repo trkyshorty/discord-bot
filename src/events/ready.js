@@ -1,9 +1,21 @@
-const { Event } = require('../system');
+const { Event, ActivityType } = require('../bot')
 
-class ReadyEvent extends Event {
-  run() {
-    this.client.user.setActivity(`👀 |`, { type: 'WATCHING' });
+class Ready extends Event {
+  constructor(client) {
+    super(client, {
+      name: 'ready',
+      description: 'Bot ready event',
+    })
+  }
+
+  async run () {
+    console.log(`Logged in as ${this.client.user.tag}!`)
+
+    this.client.user.setPresence({
+      activities: [{ name: `👀`, type: ActivityType.Watching }],
+      status: 'online',
+    })
   }
 }
 
-module.exports = ReadyEvent;
+module.exports = Ready

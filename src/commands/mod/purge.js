@@ -1,35 +1,40 @@
-const { Command } = require('../../system');
+const { Command, PermissionFlagsBits } = require('../../bot')
 
-module.exports = class PurgeCommand extends Command {
+class Purge extends Command {
   constructor(client) {
     super(client, {
       name: 'purge',
+      description: "Delete messages as given amount",
       aliases: ['purge'],
 
-      clientPermissions: [],
-      userPermissions: [],
-      moderatorOnly: true,
-      ownerOnly: false,
+      clientPermissions: PermissionFlagsBits.Administrator,
+      memberPermissions: PermissionFlagsBits.Administrator,
 
       args: [
         {
           name: 'amount',
+          description: 'How many messages will be deleted?',
           type: 'integer',
+          required: true,
         },
       ],
-    });
+    })
   }
 
-  async run(message, [amount]) {
-    if (!amount || amount < 2 || amount > 100) return message.reply('Silinecek mesaj adeti 2 ~ 100 aralığında olmalı!');
-    const fetchedMessages = await message.channel.messages.fetch({ limit: amount });
-    const filteredMessages = fetchedMessages.filter((msg) => {
-      return msg.createdTimestamp > Date.now() - 1000 * 60 * 60 * 24 * 14;
-    });
-    message.channel.bulkDelete(filteredMessages).catch((err) => {
-      message.channel.send(err.message).then((msg) => {
-        msg.delete({ timeout: 3000 });
-      });
-    });
+  async run (amount) {
+    await this.interaction.channel.messages.fetch({ limit: amount })
+      .then(messages => {
+        this.interaction.channel.bulkDelete(messages, true)
+      })
+      .catch((err) => console.error(err))
+
+    this.interaction.reply({
+      embeds: [{
+        description: `⛔ Deleted ${amount} messages`
+      }],
+      ephemeral: true
+    })
   }
-};
+}
+
+module.exports = Purge

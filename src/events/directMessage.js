@@ -1,14 +1,16 @@
-const { Event } = require('../system');
+const { Event } = require('../bot')
 
-class DirectMessageEvent extends Event {
-  run(message) {
-    if (message.author.bot) return;
-    message
-      .reply(
-        `Yardıma ihtiyacın varsa https://support.elym2.com adresini kullanabilirsin, sana kısa süre içerisinde yardımcı olacağız.`
-      )
-      .catch((err) => this.logger.warn(err));
+class DirectMessage extends Event {
+  constructor(client) {
+    super(client, {
+      name: 'directMessage',
+      description: 'Direct message event',
+    })
+  }
+
+  async run(message) {
+    if (message.author.bot) return
   }
 }
 
-module.exports = DirectMessageEvent;
+module.exports = DirectMessage

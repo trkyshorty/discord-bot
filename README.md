@@ -1,4 +1,4 @@
-# Zimbo
+# Discord Bot
 
 ## Table of Contents
 
@@ -11,8 +11,6 @@
 
 - **Lavalink**: latest [Lavalink](https://github.com/Frederikam/Lavalink) features
 - **NoSQL database**: [MongoDB](https://www.mongodb.com) object data modeling using [Mongoose](https://mongoosejs.com)
-- **Logging**: using [winston](https://github.com/winstonjs/winston)
-- **Error handling**: centralized error handling mechanism
 - **Process management**: advanced production process management using [PM2](https://pm2.keymetrics.io)
 - **Environment variables**: using [dotenv](https://github.com/motdotla/dotenv) and [cross-env](https://github.com/kentcdodds/cross-env#readme)
 - **Container**: [docker](https://docs.docker.com/get-started/overview/) support
@@ -23,15 +21,14 @@
 
 ## Bot Features
 
-- **Music**: Full featured music bot (!play, !pause, !resume, !skip, !volume, !leave, !bassboost)
+- **Music**: Full featured music bot (!play, !pause, !resume, !skip, !leave)
 - **Ranking**: Experience points are earned based on chat and this determines the ranking (!highscore, !rank)
-- **Moderation**: Moderation features (!ban, !mute, !purge, !unban, !unmute)
+- **Moderation**: Moderation features (!purge)
 - **Information**: For now it has only one feature (!avatar)
 
 ## Requirements
 
 - Docker
-- Java
 
 ## Server Configuration
 

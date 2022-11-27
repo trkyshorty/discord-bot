@@ -1,69 +1,71 @@
-const canvacord = require('canvacord');
-const path = require('path');
-const { MessageAttachment } = require('discord.js');
-const { Command } = require('../../system');
+const { Command, PermissionFlagsBits, AttachmentBuilder } = require('../../bot')
+const GuildMember = require('../../models/guildMember')
+const canvacord = require('canvacord')
+const path = require('path')
 
-class RankCommand extends Command {
+class Rank extends Command {
   constructor(client) {
     super(client, {
       name: 'rank',
+      description: "Get user level",
       aliases: ['rank', 'level'],
 
-      clientPermissions: ['ADMINISTRATOR'],
-      userPermissions: [],
-      moderatorOnly: false,
-      ownerOnly: false,
+      clientPermissions: PermissionFlagsBits.Administrator,
+      memberPermissions: PermissionFlagsBits.Administrator,
 
       args: [
         {
-          name: 'member',
+          name: 'user',
+          description: 'Enter the user',
           type: 'user',
+          required: true,
         },
       ],
-    });
+    })
   }
 
-  run(message, [member]) {
-    const user = (member && member.user) || message.author;
-
-    const { models } = this.client.database;
-
-    models.GuildMember.find({ guild_id: message.guild.id })
+  async run (user) {
+    GuildMember.find({ guild_id: this.interaction.guild.id, user_id: user.id })
       .sort({ level: 'desc', exp: 'desc' })
       .then(async (guildMemberDocs) => {
         const userPosition = guildMemberDocs.findIndex((x) => {
-          return x.user_id === user.id;
-        });
+          return x.user_id === user.id
+        })
 
-        if (userPosition === -1) return message.channel.send(`${user.username} henüz bir sıralamaya sahip değil.`);
+        if (userPosition === -1) return
 
-        const guildMember = message.guild.member(user);
-        const defaultColor = '#FFF';
-        const progressBarColor = '#C13430';
-        const overlayColor = '#000';
-        const overlayOpacity = 0.75;
+        const guildMember = await this.interaction.guild.members
+          .fetch({ user, force: true })
+          .catch((err) => console.error(err))
+
+        if (!guildMember) return
+
+        const defaultColor = '#FFF'
+        const progressBarColor = '#C13430'
+        const overlayColor = '#000'
+        const overlayOpacity = 0.75
 
         const rank = new canvacord.Rank()
-          .setAvatar(guildMember.user.displayAvatarURL({ format: 'jpg' }))
-          .setCurrentXP(guildMemberDocs[userPosition].exp, defaultColor)
+          .setAvatar(user.displayAvatarURL({ format: 'jpg' }))
+          .setCurrentXP(guildMemberDocs[userPosition].experience, defaultColor)
           .setRequiredXP(guildMemberDocs[userPosition].level * 121, defaultColor)
-          .setStatus(guildMember.user.presence.status)
+          .setStatus(guildMember.presence.status)
           .setProgressBar(progressBarColor, 'COLOR')
           .setRank(userPosition + 1, '#')
           .setRankColor(defaultColor, defaultColor)
           .setLevel(guildMemberDocs[userPosition].level, 'Level')
           .setLevelColor(defaultColor, defaultColor)
-          .setUsername(guildMember.displayName, defaultColor)
-          .setBackground('IMAGE', path.join(__dirname, '../../../resources/images/background.jpg'))
+          .setUsername(user.username, defaultColor)
+          .setBackground('IMAGE', path.join(__dirname, '../../../resources/images/rank_background.png'))
           .setOverlay(overlayColor, overlayOpacity)
-          .setDiscriminator(guildMember.user.discriminator, defaultColor);
+          .setDiscriminator(user.discriminator, defaultColor)
 
         rank.build().then((data) => {
-          const attachment = new MessageAttachment(data, 'rank.png');
-          message.channel.send(attachment);
-        });
-      });
+          const attachment = new AttachmentBuilder(data, '${user.id}.png')
+          this.interaction.reply({ files: [attachment] })
+        })
+      })
   }
 }
 
-module.exports = RankCommand;
+module.exports = Rank

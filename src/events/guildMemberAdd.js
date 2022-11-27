@@ -1,38 +1,34 @@
-const { MessageEmbed } = require('discord.js');
-const { Event } = require('../system');
+const { Event } = require('../bot')
+const GuildMember = require('../models/guildMember')
 
-class GuildMemberAddEvent extends Event {
-  run(member) {
+class GuildMemberAdd extends Event {
+  constructor(client) {
+    super(client, {
+      name: 'guildMemberAdd',
+      description: 'Guild member add event',
+    })
+  }
+
+  async run (member) {
+
+    const filter = { guild_id: member.guild.id, user_id: member.user.id }
+    const update = { }
+
+    await GuildMember.findOneAndUpdate(filter, update, {
+      new: true,
+      upsert: true
+    })
+
     member
       .send(
-        `Elym2 topluluk sunucusuna hoş geldin ${member.user}, Sunucu içerisinde uyulması gereken bazı kurallar var\n\n` +
-          `1) Diğer üyelere karşı saygılı olmalısın\n` +
-          `2) Siyasi paylaşımlardan kaçınmalısın\n` +
-          `3) Saygı çerçevesini aşan yazı ve söylemlerden uzak durmalısın\n\n` +
-          `Bu kurallara dikkat ettiğin sürece discord içerisinde özgürce duygularını ifade edebilir, sohbetlerini gerçekleştirebilirsin.\n` +
-          `Bazı kanallar yaş sınırlamasına ve bazı tercihlere göre kullanılabilmektedir bunun için sunucu içerisinde **#tercihler** kanalını ziyaret edin.\n\n` +
-          `İyi Eğlenceler!`
+        `KOF topluluk sunucusuna hoş geldin ${member.user}, Sunucu içerisinde bazı kurallar var\n\n` +
+        `1) Diğer üyelere karşı saygılı olmalısın\n` +
+        `2) Saygı çerçevesini aşan yazı ve söylemlerden uzak durmalısın\n\n` +
+        `Bu kurallara dikkat ettiğin sürece discord içerisinde özgürce duygularını ifade edebilir, sohbetlerini gerçekleştirebilirsin.\n` +
+        `Aramıza hoş geldin!`
       )
-      .catch((err) => this.logger.warn(err));
-
-    const { models } = this.client.database;
-    models.Guild.findOne({ guild_id: member.guild.id }).then((guildDoc) => {
-      const moderationPlugin = guildDoc.plugins.moderation;
-
-      if (moderationPlugin && moderationPlugin.enable) {
-        const moderationLogChannel = this.client.channels.cache.get(moderationPlugin.log_channel);
-
-        const memberAddLog = new MessageEmbed()
-          .setColor('#008000')
-          .setAuthor(`${member.user.username}`, `${member.user.displayAvatarURL({ format: 'png', size: 2048 })}`)
-          .setThumbnail(`${member.user.displayAvatarURL({ format: 'png', size: 2048 })}`)
-          .setDescription(`${member.user} az önce sunucuya giriş yaptı`)
-          .setTimestamp();
-
-        moderationLogChannel.send(memberAddLog).catch((err) => this.logger.warn(err));
-      }
-    });
+      .catch((err) => this.logger.warn(err))
   }
 }
 
-module.exports = GuildMemberAddEvent;
+module.exports = GuildMemberAdd

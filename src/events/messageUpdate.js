@@ -1,34 +1,59 @@
-const { MessageEmbed } = require('discord.js');
-const { Event } = require('../system');
+const { Event, EmbedBuilder } = require('../bot')
+const Guild = require('../models/guild')
+class MessageUpdate extends Event {
+  constructor(client) {
+    super(client, {
+      name: 'messageUpdate',
+      description: 'Message update event',
+    })
+  }
 
-class MessageUpdateEvent extends Event {
-  run(oldMessage, newMessage) {
-    const { models } = this.client.database;
-    models.Guild.findOne({ guild_id: oldMessage.channel.guild.id }).then((guildDoc) => {
-      const moderationPlugin = guildDoc.plugins.moderation;
+  async run (oldMessage, newMessage) {
+    if (oldMessage.author.bot) return
+    if (oldMessage.partial) await oldMessage.fetch()
 
-      if (moderationPlugin && moderationPlugin.enable) {
-        const moderationLogChannel = this.client.channels.cache.get(moderationPlugin.log_channel);
-        if (!moderationLogChannel) return;
+    const filter = { guild_id: oldMessage.channel.guild.id }
+    const update = {}
 
-        const messageUpdateLog = new MessageEmbed()
+    const guild = await Guild.findOneAndUpdate(filter, update, {
+      new: true,
+      upsert: true
+    })
+
+    if (guild.log_channel == '0') return
+
+    this.client.channels.fetch(guild.log_channel)
+      .then(async (channel) => {
+        const messageUpdateLog = new EmbedBuilder()
           .setColor('#0099ff')
-          .setAuthor(
-            `${oldMessage.author.username}`,
-            `${oldMessage.author.displayAvatarURL({ format: 'png', size: 2048 })}`
+          .setAuthor({
+            name: `${oldMessage.author.username}`,
+            iconURL: `${oldMessage.author.displayAvatarURL({
+              format: 'png',
+              size: 2048,
+            })}`,
+          })
+          .setThumbnail(
+            `${oldMessage.author.displayAvatarURL({
+              format: 'png',
+              size: 2048,
+            })}`
           )
-          .setThumbnail(`${oldMessage.author.displayAvatarURL({ format: 'png', size: 2048 })}`)
           .setDescription(
-            `:pencil: ${oldMessage.author} tarafından gönderilen **[Mesaj](https://discordapp.com/channels/${oldMessage.channel.guild.id}/${oldMessage.channel.id}/${oldMessage.id})** değiştirildi`
+            `:pencil: ${oldMessage.author} owned message edited **[Message](https://discordapp.com/channels/${oldMessage.channel.guild.id}/${oldMessage.channel.id}/${oldMessage.id})**`
           )
-          .addField('Eski Mesaj', oldMessage.content)
-          .addField('Yeni Mesaj', newMessage.content)
-          .setTimestamp();
+          .addFields(
+            { name: 'Old Message', value: `${oldMessage.content}` },
+            { name: 'New Message', value: `${newMessage.content}` }
+          )
+          .setTimestamp()
 
-        moderationLogChannel.send(messageUpdateLog).catch((err) => this.logger.warn(err));
-      }
-    });
+        channel
+          .send({ embeds: [messageUpdateLog] })
+          .catch((err) => console.error(err))
+      })
+      .catch((err) => console.error(err))
   }
 }
 
-module.exports = MessageUpdateEvent;
+module.exports = MessageUpdate

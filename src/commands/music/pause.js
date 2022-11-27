@@ -1,28 +1,53 @@
-const { Command } = require('../../system');
+const { Command, PermissionFlagsBits } = require('../../bot')
 
-class PauseCommand extends Command {
+class Pause extends Command {
   constructor(client) {
     super(client, {
       name: 'pause',
-      aliases: ['pause', 'stop', 'dur'],
+      description: "Pause the music player",
+      aliases: ['pause', 'stop'],
 
-      clientPermissions: ['ADMINISTRATOR'],
-      userPermissions: [],
-      moderatorOnly: false,
-      ownerOnly: false,
-    });
+      clientPermissions: PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,
+      memberPermissions: PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,
+    })
   }
 
-  /**
-   * TODO: Update this.client.queue Playing state
-   *
-   * @param {any} message
-   */
-  async run(message) {
-    const player = this.client.manager.players.get(message.guild.id);
-    if (!player) return;
-    await player.pause(true);
+  async run () {
+    if (!this.client.lavalink) {
+      return this.interaction.reply({
+        embeds: [{
+          description: `⛔ Lavalink is not ready`
+        }],
+        ephemeral: true
+      })
+    }
+
+    let player = this.client.players.get(this.interaction.member.guild.id)
+
+    if (!player) {
+      return this.interaction.reply({
+        embeds: [{
+          description: `⛔ There is no music player in this guild`
+        }],
+        ephemeral: true
+      })
+    }
+
+    const voiceChannel = this.interaction.member.voice.channel
+
+    if (player.queue.voiceChannel !== voiceChannel) {
+      return this.interaction.reply({
+        embeds: [{
+          description: `⛔ Music player is busy, you can listen on **${voiceChannel}** channel`
+        }],
+        ephemeral: true
+      })
+    }
+
+    await player.pause(true)
+
+    await this.interaction.deferUpdate()
   }
 }
 
-module.exports = PauseCommand;
+module.exports = Pause

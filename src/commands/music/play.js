@@ -1,136 +1,137 @@
-const fetch = require('node-fetch');
-const { URLSearchParams } = require('url');
-const { MessageEmbed } = require('discord.js');
-const { Command } = require('../../system');
+const { Command, PermissionFlagsBits } = require('../../bot')
+const { decode } = require('lavaclient')
 
-class PlayCommand extends Command {
+class Play extends Command {
   constructor(client) {
     super(client, {
       name: 'play',
-      aliases: ['play', 'p', 'çal'],
+      description: "Call a music player to voice channel",
+      aliases: ['play', 'p'],
 
-      clientPermissions: ['ADMINISTRATOR'],
-      userPermissions: [],
-      moderatorOnly: false,
-      ownerOnly: false,
+      clientPermissions: PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,
+      memberPermissions: PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,
 
       args: [
         {
-          name: 'search',
+          name: 'term-or-link',
+          description: 'Enter the link or name of the song',
           type: 'string',
+          required: true,
         },
       ],
-    });
-  }
-
-  /**
-   * @param {Message} message
-   * @param {String} color
-   */
-  messageEmbeed(message, color = '#0099ff') {
-    const messageEmbed = new MessageEmbed();
-    messageEmbed.setDescription(message).setColor(color);
-    return messageEmbed;
-  }
-
-  /** @param {String} search */
-  async getSongs(search) {
-    const node = this.client.manager.idealNodes[0];
-
-    const params = new URLSearchParams();
-    params.append('identifier', search);
-
-    return fetch(`http://${node.host}:${node.port}/loadtracks?${params}`, {
-      headers: { Authorization: node.password },
     })
-      .then((res) => res.json())
-      .then((data) => data.tracks)
-      .catch((err) => this.logger.warn(err));
   }
 
-  /**
-   * @param {Guild} guild
-   * @param {Object} song
-   */
-  async play(guild, song) {
-    const serverQueue = this.client.queue.get(guild.id);
-    if (!song) {
-      this.client.user.setActivity(`👀 |`, { type: 'WATCHING' });
-      this.client.queue.delete(guild.id);
-      return;
+  async run (term) {
+    if (!this.client.lavalink) return
+
+    const member = this.interaction.member
+    const guild = member.guild
+    const voiceChannel = member.voice.channel
+    const interactionChannel = this.interaction.channel
+
+    let player = this.client.players.get(guild.id)
+
+    if (player && player.queue.voiceChannel !== voiceChannel) {
+      return this.interaction.reply({
+        embeds: [{
+          description: `⛔ Music player is busy, you can listen on **${voiceChannel}** channel`
+        }],
+        ephemeral: true
+      })
     }
 
-    await serverQueue.player.play(song.track);
+    if (!voiceChannel) {
+      return this.interaction.reply({
+        embeds: [{
+          description: `⛔ You can't listen to music without entering the voice channel`
+        }],
+        ephemeral: true
+      })
+    }
 
-    serverQueue.player.once('error', (error) => console.error(error));
-    serverQueue.player.once('end', (data) => {
-      if (data.reason === 'REPLACED') return false;
-      serverQueue.songs.shift();
-      this.play(guild, serverQueue.songs[0]);
-    });
+    let tracks = []
 
-    this.client.user.setActivity(`🎵 | ${song.info.title}`, { type: 'WATCHING' });
+    const results = await this.client.lavalink.rest.loadTracks(
+      /^https?:\/\//.test(term) ? term : `ytsearch:${term}`
+    )
 
-    serverQueue.textChannel.send(
-      this.messageEmbeed(`🎵 Çalıyor [${song.info.title}](${song.info.uri}) [ ${song.requested} ]`, '#00FF00')
-    );
-  }
+    switch (results.loadType) {
+      case 'LOAD_FAILED':
+      case 'NO_MATCHES':
+        return this.interaction.reply({
+          embeds: [{
+            description: `⛔ Track not found or failed to load`
+          }],
+          ephemeral: true
+        })
+      case 'PLAYLIST_LOADED':
+        tracks = results.tracks
+        this.interaction.reply({
+          embeds: [{
+            description: `🎵 Playlist[**${results.playlistInfo.name}**](${this.argument(0)}) loaded and **${tracks.length
+              }** songs queued`
+          }],
+          ephemeral: false
+        })
+        break
+    }
 
-  /**
-   * @param {Message} message
-   * @param {Array} search
-   */
-  run(message, [search]) {
-    if (!search) return;
-    if (!message.member.voice.channel)
-      return message
-        .reply(this.messageEmbeed('Önce bir ses kanalına girmen gerekiyor', '#FF0000'))
-        .catch(console.error);
+    if (!player) {
+      player = this.client.lavalink.createPlayer(guild.id)
 
-    let searchString = `ytsearch:${search}`;
-    if (search.match(/\b(https?:\/\/.*?\.[a-z]{2,4}\/[^\s]*\b)/g)) searchString = `${search}`;
+      player.queue.interactionChannel = interactionChannel
+      player.queue.voiceChannel = voiceChannel
 
-    this.getSongs(`${searchString}`).then(async (songs) => {
-      if (!songs || !songs[0]) {
-        return message.reply(this.messageEmbeed(`${search} bulunamadı`, '#FF0000')).catch(console.error);
+      const filter = interaction => {
+        return interaction.customId === 'resume'
+          || interaction.customId === 'pause'
+          || interaction.customId === 'skip'
+          || interaction.customId === 'leave'
       }
 
-      Object.assign(songs[0], { requested: message.author });
+      player.queue.collector = player.queue.interactionChannel.createMessageComponentCollector({ filter, time: 3600000 })
 
-      const serverQueue = this.client.queue.get(message.guild.id);
+      player.queue.collector.on('collect', async interaction => {
+        try {
+          console.info(`[BUTTON] ${interaction.customId} button executed`)
+          
+          const command = this.client.commands.get(interaction.customId)
+          if (command)
+            command.execute(interaction)
+        } catch (error) {
+          console.error(error)
+        }
+      })
 
-      if (!serverQueue) {
-        const queueContruct = {
-          textChannel: message.channel,
-          voiceChannel: message.member.voice.channel,
-          connection: null,
-          songs: [],
-          volume: 5,
-          playing: true,
-          player: await this.client.manager.join({
-            guild: message.guild.id,
-            channel: message.member.voice.channelID,
-            node: '1',
-          }),
-          listeners: 0,
-        };
+      player.queue.collector.on('end', collected => console.log(`Collected Music Player ${collected.size} items`))
 
-        this.client.queue.set(message.guild.id, queueContruct);
-        queueContruct.songs.push(songs[0]);
-        await this.play(message.guild, queueContruct.songs[0]);
-      } else {
-        serverQueue.songs.push(songs[0]);
-        serverQueue.textChannel
-          .send(
-            this.messageEmbeed(
-              `🎵 Sırada [${songs[0].info.title}](${songs[0].info.uri}) [ ${songs[0].requested} ]`,
-              '#00FF00'
-            )
-          )
-          .catch((err) => this.logger.warn(err));
-      }
-    });
+      await player.connect(voiceChannel.id, { deafened: true })
+        .on('trackStart', (track) => this.client.emit("trackStart", guild, decode(track)))
+        .on('trackEnd', (track) => this.client.emit("trackEnd", guild, decode(track)))
+
+      this.client.players.set(guild.id, player)
+    }
+
+    switch (results.loadType) {
+      case 'TRACK_LOADED':
+      case 'SEARCH_RESULT':
+        {
+          const [track] = results.tracks
+          tracks = [track]
+          this.client.emit("trackQueueAdd", this.interaction, track.info)
+        }
+        break
+    }
+
+    const started = player.playing || player.paused
+
+    player.queue.add(tracks, { requester: member.id, next: false })
+
+    if (!started) {
+      await player.queue.start()
+    }
   }
 }
 
-module.exports = PlayCommand;
+module.exports = Play

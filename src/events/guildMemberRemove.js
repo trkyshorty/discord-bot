@@ -1,26 +1,48 @@
-const { MessageEmbed } = require('discord.js');
-const { Event } = require('../system');
+const { Event, EmbedBuilder } = require('../bot')
+const Guild = require('../models/guild')
 
-class GuildMemberRemoveEvent extends Event {
-  run(member) {
-    const { models } = this.client.database;
-    models.Guild.findOne({ guild_id: member.guild.id }).then((guildDoc) => {
-      const moderationPlugin = guildDoc.plugins.moderation;
+class GuildMemberRemove extends Event {
+  constructor(client) {
+    super(client, {
+      name: 'guildMemberRemove',
+      description: 'Guild member remove event',
+    })
+  }
 
-      if (moderationPlugin && moderationPlugin.enable) {
-        const moderationLogChannel = this.client.channels.cache.get(moderationPlugin.log_channel);
+  async run (member) {
 
-        const memberRemoveLog = new MessageEmbed()
+    const filter = { guild_id: member.guild.id }
+    const update = {}
+
+    const guild = await Guild.findOneAndUpdate(filter, update, {
+      new: true,
+      upsert: true
+    })
+
+    if (guild.log_channel == '0') return
+
+    this.client.channels.fetch(guild.log_channel)
+      .then(async (channel) => {
+        const memberRemoveLog = new EmbedBuilder()
           .setColor('#FF0000')
-          .setAuthor(`${member.user.username}`, `${member.user.displayAvatarURL({ format: 'png', size: 2048 })}`)
-          .setThumbnail(`${member.user.displayAvatarURL({ format: 'png', size: 2048 })}`)
-          .setDescription(`${member.user} az önce sunucudan ayrıldı`)
-          .setTimestamp();
+          .setAuthor({
+            name: `${member.user.username}`,
+            iconURL: `${member.user.displayAvatarURL({
+              format: 'png',
+              size: 2048,
+            })}`,
+          })
+          .setThumbnail(
+            `${member.user.displayAvatarURL({ format: 'png', size: 2048 })}`
+          )
+          .setDescription(`${member.user} left the server`)
+          .setTimestamp()
 
-        moderationLogChannel.send(memberRemoveLog).catch((err) => this.logger.warn(err));
-      }
-    });
+        await channel
+          .send({ embeds: [memberRemoveLog] })
+          .catch((err) => console.error(err))
+      }).catch((err) => console.error(err))
   }
 }
 
-module.exports = GuildMemberRemoveEvent;
+module.exports = GuildMemberRemove
