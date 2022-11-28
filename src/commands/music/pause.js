@@ -46,7 +46,16 @@ class Pause extends Command {
 
     await player.pause(true)
 
-    await this.interaction.deferUpdate()
+    if (this.interaction.isButton())
+      await this.interaction.deferUpdate().catch((err) => console.error(err))
+    else {
+      this.interaction.reply({
+        embeds: [{
+          description: `🎵 Music player has been paused`
+        }],
+        ephemeral: false
+      })
+    }
   }
 }
 

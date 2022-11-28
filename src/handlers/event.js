@@ -6,7 +6,7 @@ class Event {
 
   async execute(...args) {
     try {
-      console.info(`[EVENT] ${this.info.name} event executed`)
+      console.info(`[EVENT] Execute ${this.info.name}`)
       await this.run(...args)
     } catch (err) {
       console.error(err)

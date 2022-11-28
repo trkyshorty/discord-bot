@@ -7,7 +7,7 @@ class Command {
 
   async execute(interaction) {
     try {
-      console.info(`[COMMAND] ${this.info.name} command executed`)
+      console.info(`[COMMAND] Execute ${this.info.name}`)
 
       this.interaction = interaction
 

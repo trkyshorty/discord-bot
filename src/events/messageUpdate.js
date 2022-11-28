@@ -20,39 +20,39 @@ class MessageUpdate extends Event {
       upsert: true
     })
 
-    if (guild.log_channel == '0') return
+    if (guild.log_channel != '0') {
+      this.client.channels.fetch(guild.log_channel)
+        .then(async (channel) => {
+          const messageUpdateLog = new EmbedBuilder()
+            .setColor('#0099ff')
+            .setAuthor({
+              name: `${oldMessage.author.username}`,
+              iconURL: `${oldMessage.author.displayAvatarURL({
+                format: 'png',
+                size: 2048,
+              })}`,
+            })
+            .setThumbnail(
+              `${oldMessage.author.displayAvatarURL({
+                format: 'png',
+                size: 2048,
+              })}`
+            )
+            .setDescription(
+              `:pencil: ${oldMessage.author} owned message edited **[Message](https://discordapp.com/channels/${oldMessage.channel.guild.id}/${oldMessage.channel.id}/${oldMessage.id})**`
+            )
+            .addFields(
+              { name: 'Old Message', value: `${oldMessage.content}` },
+              { name: 'New Message', value: `${newMessage.content}` }
+            )
+            .setTimestamp()
 
-    this.client.channels.fetch(guild.log_channel)
-      .then(async (channel) => {
-        const messageUpdateLog = new EmbedBuilder()
-          .setColor('#0099ff')
-          .setAuthor({
-            name: `${oldMessage.author.username}`,
-            iconURL: `${oldMessage.author.displayAvatarURL({
-              format: 'png',
-              size: 2048,
-            })}`,
-          })
-          .setThumbnail(
-            `${oldMessage.author.displayAvatarURL({
-              format: 'png',
-              size: 2048,
-            })}`
-          )
-          .setDescription(
-            `:pencil: ${oldMessage.author} owned message edited **[Message](https://discordapp.com/channels/${oldMessage.channel.guild.id}/${oldMessage.channel.id}/${oldMessage.id})**`
-          )
-          .addFields(
-            { name: 'Old Message', value: `${oldMessage.content}` },
-            { name: 'New Message', value: `${newMessage.content}` }
-          )
-          .setTimestamp()
-
-        channel
-          .send({ embeds: [messageUpdateLog] })
-          .catch((err) => console.error(err))
-      })
-      .catch((err) => console.error(err))
+          channel
+            .send({ embeds: [messageUpdateLog] })
+            .catch((err) => console.error(err))
+        })
+        .catch((err) => console.error(err))
+    }
   }
 }
 

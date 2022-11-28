@@ -16,6 +16,8 @@ class TrackEnd extends Event {
       .delete()
       .catch((err) => console.error(err))
 
+    player.queue.nowPlayingMessage = null
+
     if (player.queue.tracks.length == 0) {
       this.client.emit('trackQueueEnd', player.queue.interactionChannel)
     }

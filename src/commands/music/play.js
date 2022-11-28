@@ -77,7 +77,7 @@ class Play extends Command {
         break
     }
 
-    if (!player) {
+    if (!player || !player?.connected) {
       player = this.client.lavalink.createPlayer(guild.id)
 
       player.queue.interactionChannel = interactionChannel
@@ -94,8 +94,8 @@ class Play extends Command {
 
       player.queue.collector.on('collect', async interaction => {
         try {
-          console.info(`[BUTTON] ${interaction.customId} button executed`)
-          
+          console.info(`[COLLECTOR] ${interaction.customId} button executed`)
+
           const command = this.client.commands.get(interaction.customId)
           if (command)
             command.execute(interaction)
@@ -104,11 +104,13 @@ class Play extends Command {
         }
       })
 
-      player.queue.collector.on('end', collected => console.log(`Collected Music Player ${collected.size} items`))
+      player.queue.collector.on('end', collected => console.log(`[COLLECTOR] Collected Music Player ${collected.size} items`))
 
       await player.connect(voiceChannel.id, { deafened: true })
         .on('trackStart', (track) => this.client.emit("trackStart", guild, decode(track)))
         .on('trackEnd', (track) => this.client.emit("trackEnd", guild, decode(track)))
+
+      this.client.emit("musicPlayerReady", player)
 
       this.client.players.set(guild.id, player)
     }

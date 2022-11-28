@@ -30,7 +30,7 @@ class Bot extends Client {
     this.commands = new Collection()
     this.aliases = new Collection()
     this.players = new Map()
-    this.experienceCooldown = new Set();
+    this.experienceCooldown = new Set()
 
     this.database = null
     this.lavalink = null
@@ -57,8 +57,7 @@ class Bot extends Client {
         /* eslint-enable new-cap */
 
         console.info(
-          `Load Command: ${command.info.name
-          } - Aliases: ${command.info.aliases.join(', ')}`
+          `[COMMAND] Load ${command.info.name} - ${command.info.aliases.join(', ')}`
         )
 
         this.commands.set(command.info.name, command)
@@ -152,7 +151,7 @@ class Bot extends Client {
       })
       .then((data) =>
         console.info(
-          `Successfully registered ${data.length} application commands`
+          `[COMMAND] Successfully registered ${data.length} application commands`
         )
       )
       .catch((err) => {
@@ -174,7 +173,7 @@ class Bot extends Client {
         if (typeof event === 'function') event = new event(this)
         /* eslint-enable new-cap */
 
-        console.info(`Load Event: ${event.info.name}`)
+        console.info(`[EVENT] Load ${event.info.name}`)
 
         this.on(event.info.name, async (...args) => {
           await event.execute(...args)

@@ -9,7 +9,7 @@ class DatabaseReady extends Event {
   }
 
   async run() {
-    console.info(`Database is ready!`)
+    console.info(`[DATABASE] Connected`)
   }
 }
 

@@ -19,29 +19,29 @@ class GuildMemberRemove extends Event {
       upsert: true
     })
 
-    if (guild.log_channel == '0') return
+    if (guild.log_channel != '0') {
+      this.client.channels.fetch(guild.log_channel)
+        .then(async (channel) => {
+          const memberRemoveLog = new EmbedBuilder()
+            .setColor('#FF0000')
+            .setAuthor({
+              name: `${member.user.username}`,
+              iconURL: `${member.user.displayAvatarURL({
+                format: 'png',
+                size: 2048,
+              })}`,
+            })
+            .setThumbnail(
+              `${member.user.displayAvatarURL({ format: 'png', size: 2048 })}`
+            )
+            .setDescription(`${member.user} left the server`)
+            .setTimestamp()
 
-    this.client.channels.fetch(guild.log_channel)
-      .then(async (channel) => {
-        const memberRemoveLog = new EmbedBuilder()
-          .setColor('#FF0000')
-          .setAuthor({
-            name: `${member.user.username}`,
-            iconURL: `${member.user.displayAvatarURL({
-              format: 'png',
-              size: 2048,
-            })}`,
-          })
-          .setThumbnail(
-            `${member.user.displayAvatarURL({ format: 'png', size: 2048 })}`
-          )
-          .setDescription(`${member.user} left the server`)
-          .setTimestamp()
-
-        await channel
-          .send({ embeds: [memberRemoveLog] })
-          .catch((err) => console.error(err))
-      }).catch((err) => console.error(err))
+          await channel
+            .send({ embeds: [memberRemoveLog] })
+            .catch((err) => console.error(err))
+        }).catch((err) => console.error(err))
+    }
   }
 }
 

@@ -14,7 +14,7 @@ class TrackStart extends Event {
     })
   }
 
-  async run(guild, track) {
+  async run (guild, track) {
     let player = this.client.players.get(guild.id)
     if (!player) return
 
@@ -59,7 +59,7 @@ class TrackStart extends Event {
     this.client.user.setPresence({
       activities: [
         {
-          name: `🎵 | ${track.title}`,
+          name: `🎵 ${track.title}`,
           type: ActivityType.Watching,
           url: track.uri,
         },

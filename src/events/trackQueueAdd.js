@@ -12,7 +12,7 @@ class TrackQueueAdd extends Event {
     await interaction.reply({
       embeds: [
         {
-          description: `🎵 Added Queue : [${track.title}](${track.uri})`,
+          description: `🎵 Queued : [${track.title}](${track.uri})`,
         },
       ],
       ephemeral: false,

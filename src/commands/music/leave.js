@@ -44,17 +44,18 @@ class Leave extends Command {
       })
     }
 
-    this.client.user.setPresence({
-      activities: [{ name: `👀 |`, type: ActivityType.Watching }],
-      status: 'dnd',
-    })
+    this.client.emit("musicPlayerDestroy", player)
 
-    await player.disconnect()
-
-    this.client.lavalink.destroyPlayer(player.guildId)
-
-    await this.interaction.deferUpdate()
-
+    if (this.interaction.isButton())
+      await this.interaction.deferUpdate().catch((err) => console.error(err))
+    else {
+      this.interaction.reply({
+        embeds: [{
+          description: `🎵 Music player leaved from **${voiceChannel}** channel`
+        }],
+        ephemeral: false
+      })
+    }
   }
 }
 

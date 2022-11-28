@@ -27,7 +27,7 @@ class GuildMemberAdd extends Event {
         `Bu kurallara dikkat ettiğin sürece discord içerisinde özgürce duygularını ifade edebilir, sohbetlerini gerçekleştirebilirsin.\n` +
         `Aramıza hoş geldin!`
       )
-      .catch((err) => this.logger.warn(err))
+      .catch((err) => console.error(err))
   }
 }
 

@@ -9,8 +9,8 @@ class LavalinkError extends Event {
   }
 
   async run(error) {
-    console.info(error.message)
-    console.info(`Trying reconnect to lavalink in 3 seconds`)
+    console.info(`[LAVALINK] ${error.message}`)
+    console.info(`[LAVALINK] Trying reconnect to lavalink in 3 seconds`)
     setTimeout(async () => {
       await this.client.connectLavalink()
     }, 3000)
