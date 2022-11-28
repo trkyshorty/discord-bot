@@ -10,10 +10,10 @@ class DatabaseError extends Event {
 
   async run(error) {
     console.info(`[DATABASE] ${error.message}`)
-    console.info(`[DATABASE] Trying reconnect to database in 3 seconds`)
+    console.info(`[DATABASE] Trying reconnect to database in 10 seconds`)
     setTimeout(async () => {
       await this.client.connectDatabase()
-    }, 3000)
+    }, 10000)
   }
 }
 
