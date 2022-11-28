@@ -4,7 +4,7 @@ services:
   discord-bot:
     build: .
     ports:
-      - '3000:3000'
+      - '${PORT}:${PORT}'
     depends_on:
       - lavalink
       - mongodb
@@ -16,7 +16,7 @@ services:
   mongodb:
     image: mongo:5.0.14
     ports:
-      - '27017:27017'
+      - '${MONGODB_PORT}:${MONGODB_PORT}'
     volumes:
       - dbdata:/data/db
     networks:
@@ -25,7 +25,7 @@ services:
   lavalink:
     image: fredboat/lavalink:64632e6
     ports:
-      - '2333:2333'
+      - '${LAVALINK_PORT}:${LAVALINK_PORT}'
     volumes:
       - .:/opt/Lavalink
     networks:
