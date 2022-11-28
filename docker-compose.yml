@@ -3,20 +3,18 @@ version: '3'
 services:
   discord-bot:
     build: .
-    container_name: discord-bot
     ports:
       - '3000:3000'
     depends_on:
       - lavalink
       - mongodb
     volumes:
-      - .:/usr/src/bot
-      - /usr/src/bot/node_modules
+      - .:/usr/src/discord-bot
+      - /usr/src/discord-bot/node_modules
     networks:
       - node-network
   mongodb:
     image: mongo:5.0.14
-    container_name: discord-bot-mongodb
     ports:
       - '27017:27017'
     volumes:
@@ -26,7 +24,6 @@ services:
 
   lavalink:
     image: fredboat/lavalink:64632e6
-    container_name: discord-bot-lavalink
     ports:
       - '2333:2333'
     volumes:
@@ -36,9 +33,7 @@ services:
 
 volumes:
   dbdata:
-    name: discord-bot-dbdata
   
 networks:
   node-network:
-    name: discord-bot-network
     driver: bridge
