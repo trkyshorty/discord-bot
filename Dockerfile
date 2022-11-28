@@ -13,6 +13,7 @@ RUN rm -rf /usr/src/discord-bot/node_modules
 
 USER root
 
+RUN yarn global add pm2
 RUN yarn install --pure-lockfile
 
 COPY --chown=root:root . .
