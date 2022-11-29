@@ -1,12 +1,13 @@
 const { Command, PermissionFlagsBits } = require('../../bot')
 const GuildMember = require('../../models/guildMember')
 
-class AddLevel extends Command {
+class SetLevel extends Command {
   constructor(client) {
     super(client, {
-      name: 'add-level',
-      description: "Add level to a user.",
-      aliases: ['add-level'],
+      name: 'set-level',
+      description: "Set level to a user.",
+      aliases: ['set-level'],
+      category: 'admin',
 
       clientPermissions: PermissionFlagsBits.Administrator,
       memberPermissions: PermissionFlagsBits.Administrator,
@@ -48,4 +49,4 @@ class AddLevel extends Command {
   }
 }
 
-module.exports = AddLevel
+module.exports = SetLevel

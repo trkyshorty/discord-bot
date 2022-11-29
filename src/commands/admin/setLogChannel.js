@@ -1,12 +1,13 @@
 const { Command, PermissionFlagsBits } = require('../../bot')
 const Guild = require('../../models/guild')
 
-class AddLogChannel extends Command {
+class SetLogChannel extends Command {
   constructor(client) {
     super(client, {
-      name: 'add-log-channel',
-      description: "Add the log channel for the server.",
-      aliases: ['add-log-channel'],
+      name: 'set-log-channel',
+      description: "Set the log channel for the server.",
+      aliases: ['set-log-channel'],
+      category: 'admin',
 
       clientPermissions: PermissionFlagsBits.Administrator,
       memberPermissions: PermissionFlagsBits.Administrator,
@@ -40,4 +41,4 @@ class AddLogChannel extends Command {
   }
 }
 
-module.exports = AddLogChannel
+module.exports = SetLogChannel
