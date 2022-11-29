@@ -36,7 +36,7 @@ class AddLevelReward extends Command {
     const guild = await Guild.findOneAndUpdate(filter, update, {
       new: true,
       upsert: true
-    })
+    }).catch((err) => this.logger.error(err))
 
     if (guild.level.rewards.find((x) => x.role_id === role.id && x.level === level)) {
       return this.interaction.reply({

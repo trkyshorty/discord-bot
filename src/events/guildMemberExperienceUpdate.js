@@ -17,7 +17,7 @@ class GuildMemberExperienceUpdate extends Event {
       {
         new: true,
         upsert: true
-      })
+      }).catch((err) => this.logger.error(err))
 
     const random = Math.floor(Math.random() * (75 - 45)) + 45
 

@@ -30,7 +30,7 @@ class SetWelcomeMessage extends Command {
     const guild = await Guild.findOneAndUpdate(filter, update, {
       new: true,
       upsert: true
-    })
+    }).catch((err) => this.logger.error(err))
 
     guild.welcome.message = message
 

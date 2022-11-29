@@ -73,6 +73,7 @@ class Rank extends Command {
           this.interaction.reply({ files: [attachment] }).catch((err) => this.logger.error(err))
         })
       })
+      .catch((err) => this.logger.error(err))
   }
 }
 

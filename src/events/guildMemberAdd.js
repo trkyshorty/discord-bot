@@ -18,7 +18,7 @@ class GuildMemberAdd extends Event {
       {
         new: true,
         upsert: true
-      })
+      }).catch((err) => this.logger.error(err))
 
     const guild = await Guild.findOneAndUpdate(
       { guild_id: member.guild.id },
@@ -26,7 +26,7 @@ class GuildMemberAdd extends Event {
       {
         new: true,
         upsert: true
-      })
+      }).catch((err) => this.logger.error(err))
 
     if (guild.welcome.message) {
       member

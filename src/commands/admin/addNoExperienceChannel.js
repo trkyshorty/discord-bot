@@ -30,7 +30,7 @@ class AddNoExperienceChannel extends Command {
     const guild = await Guild.findOneAndUpdate(filter, update, {
       new: true,
       upsert: true
-    })
+    }).catch((err) => this.logger.error(err))
 
     if (guild.level.no_experience_channels.includes(channel.id)) {
       return this.interaction.reply({

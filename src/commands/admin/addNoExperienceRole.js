@@ -30,7 +30,7 @@ class AddNoExperienceRole extends Command {
     const guild = await Guild.findOneAndUpdate(filter, update, {
       new: true,
       upsert: true
-    })
+    }).catch((err) => this.logger.error(err))
 
     if (guild.level.no_experience_roles.includes(role.id)) {
       return this.interaction.reply({

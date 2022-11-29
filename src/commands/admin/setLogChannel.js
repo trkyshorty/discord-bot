@@ -30,7 +30,7 @@ class SetLogChannel extends Command {
     await Guild.findOneAndUpdate(filter, update, {
       new: true,
       upsert: true
-    })
+    }).catch((err) => this.logger.error(err))
 
     this.interaction.reply({
       embeds: [{

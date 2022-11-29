@@ -20,7 +20,7 @@ class GuildMessage extends Event {
       const guild = await Guild.findOneAndUpdate(filter, update, {
         new: true,
         upsert: true
-      })
+      }).catch((err) => this.logger.error(err))
 
       if (guild.level.no_experience_channels.includes(message.channel.id)) return
       if (message.member.roles.cache.some((role) => guild.level.no_experience_roles.includes(role.id))) return

@@ -30,7 +30,7 @@ class VoiceStateUpdate extends Event {
     const guild = await Guild.findOneAndUpdate(filter, update, {
       new: true,
       upsert: true
-    })
+    }).catch((err) => this.logger.error(err))
 
     if (guild.log_channel != '0') {
       this.client.channels.fetch(guild.log_channel)

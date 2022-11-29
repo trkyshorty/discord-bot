@@ -36,7 +36,7 @@ class SetLevel extends Command {
     await GuildMember.findOneAndUpdate(filter, update, {
       new: true,
       upsert: true
-    })
+    }).catch((err) => this.logger.error(err))
 
     this.client.emit("guildMemberLevelReward", this.interaction.member)
     this.client.emit('guildMemberLevelNotification', this.interaction.member, level)

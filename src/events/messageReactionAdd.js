@@ -32,7 +32,7 @@ class MessageReactionAdd extends Event {
           .add(reactionRole.role_id)
           .catch((err) => this.logger.error(err))
       }
-    )
+    ).catch((err) => this.logger.error(err))
   }
 }
 

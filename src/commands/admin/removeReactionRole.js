@@ -40,7 +40,7 @@ class RemoveReactionRole extends Command {
     Guild.findOne({ guild_id: this.interaction.guild.id }).then(async (guild) => {
       const index = guild.reaction_role.findIndex((x) => {
         return x.message_id === messageId && x.emoji === emoji && x.role_id === role.id
-      })
+      }).catch((err) => this.logger.error(err))
 
       if (index !== -1) {
         this.interaction.reply({
