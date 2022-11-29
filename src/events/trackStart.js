@@ -60,7 +60,7 @@ class TrackStart extends Event {
       activities: [
         {
           name: `🎵 ${track.title}`,
-          type: ActivityType.Custom,
+          type: ActivityType.Listening,
           url: track.uri,
         },
       ],
