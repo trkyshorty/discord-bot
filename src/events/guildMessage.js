@@ -10,8 +10,6 @@ class GuildMessage extends Event {
   }
 
   async run(message) {
-    //if (message.author.bot) return
-
     if (!this.client.experienceCooldown.has(message.member.user.id)) {
       const filter = { guild_id: message.guild.id }
       const update = {}
@@ -23,6 +21,7 @@ class GuildMessage extends Event {
 
       if (guild.level.no_experience_channels.includes(message.channel.id))
         return
+        
       if (
         message.member.roles.cache.some((role) =>
           guild.level.no_experience_roles.includes(role.id)
@@ -30,13 +29,16 @@ class GuildMessage extends Event {
       )
         return
 
-      this.client.emit('guildMemberExperienceUpdate', message.member)
+      //experience gain will start if there is a role reward
+      if(guild.level.rewards.length > 0) {
+        this.client.emit('guildMemberExperienceUpdate', message.member)
 
-      this.client.experienceCooldown.add(message.author.id)
+        this.client.experienceCooldown.add(message.author.id)
 
-      setTimeout(() => {
-        this.client.experienceCooldown.delete(message.author.id)
-      }, 1000 * 60)
+        setTimeout(() => {
+          this.client.experienceCooldown.delete(message.author.id)
+        }, 1000 * 60)
+      }
     }
   }
 }
