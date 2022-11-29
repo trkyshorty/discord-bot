@@ -7,6 +7,7 @@ class RemoveReactionRole extends Command {
       name: 'remove-reaction-role',
       description: "Remove the reaction role for the server.",
       aliases: ['remove-reaction-role'],
+      category: 'admin',
 
       clientPermissions: PermissionFlagsBits.Administrator | PermissionFlagsBits.ManageRoles,
       memberPermissions: PermissionFlagsBits.Administrator,
