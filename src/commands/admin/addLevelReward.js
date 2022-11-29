@@ -7,6 +7,7 @@ class AddLevelReward extends Command {
       name: 'add-level-reward',
       description: "Add level reward.",
       aliases: ['add-level-reward'],
+      category: 'admin',
 
       clientPermissions: PermissionFlagsBits.Administrator,
       memberPermissions: PermissionFlagsBits.Administrator,

@@ -9,6 +9,7 @@ class Rank extends Command {
       name: 'rank',
       description: "Get user level",
       aliases: ['rank', 'level'],
+      category: 'level',
 
       clientPermissions: PermissionFlagsBits.Administrator,
       memberPermissions: PermissionFlagsBits.Administrator,
@@ -32,7 +33,14 @@ class Rank extends Command {
           return x.user_id === user.id
         })
 
-        if (userPosition === -1) return
+        if (userPosition === -1) {
+          return this.interaction.reply({
+            embeds: [{
+              title: `⛔ This user does not have a level yet!`
+            }],
+            ephemeral: true
+          })
+        }
 
         const guildMember = await this.interaction.guild.members
           .fetch({ user, force: true })

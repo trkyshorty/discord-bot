@@ -6,6 +6,7 @@ class Skip extends Command {
       name: 'skip',
       description: "Change the song in the music player",
       aliases: ['skip'],
+      category: 'music',
 
       clientPermissions: PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,
       memberPermissions: PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,

@@ -56,6 +56,9 @@ class Bot extends Client {
         if (typeof command === 'function') command = new command(this)
         /* eslint-enable new-cap */
 
+        if (process.env.INSTANCE_TYPE === 'music'
+          && command.info.category !== 'music') return
+
         console.info(
           `[COMMAND] Load ${command.info.name} - ${command.info.aliases.join(', ')}`
         )

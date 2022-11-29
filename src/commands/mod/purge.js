@@ -6,6 +6,7 @@ class Purge extends Command {
       name: 'purge',
       description: "Delete messages as given amount",
       aliases: ['purge'],
+      category: 'mod',
 
       clientPermissions: PermissionFlagsBits.Administrator,
       memberPermissions: PermissionFlagsBits.Administrator,

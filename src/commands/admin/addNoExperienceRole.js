@@ -7,6 +7,7 @@ class AddNoExperienceRole extends Command {
       name: 'add-no-experience-role',
       description: "Add no experience role.",
       aliases: ['add-no-experience-role'],
+      category: 'admin',
 
       clientPermissions: PermissionFlagsBits.Administrator,
       memberPermissions: PermissionFlagsBits.Administrator,

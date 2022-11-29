@@ -7,6 +7,7 @@ class RemoveLogChannel extends Command {
       name: 'remove-log-channel',
       description: "Remove the log channel for the server.",
       aliases: ['remove-log-channel'],
+      category: 'admin',
 
       clientPermissions: PermissionFlagsBits.Administrator,
       memberPermissions: PermissionFlagsBits.Administrator,

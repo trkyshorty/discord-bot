@@ -7,6 +7,7 @@ class RemoveLevelReward extends Command {
       name: 'remove-level-reward',
       description: "Remove level reward.",
       aliases: ['remove-level-reward'],
+      category: 'admin',
 
       clientPermissions: PermissionFlagsBits.Administrator,
       memberPermissions: PermissionFlagsBits.Administrator,

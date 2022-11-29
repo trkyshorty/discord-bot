@@ -6,6 +6,7 @@ class Ping extends Command {
       name: 'ping',
       description: "Retrieve pong!",
       aliases: ['latency'],
+      category: 'dev',
 
       clientPermissions: PermissionFlagsBits.Administrator,
       memberPermissions: PermissionFlagsBits.Administrator,

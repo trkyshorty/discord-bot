@@ -7,6 +7,7 @@ class RemoveNoExperienceChannel extends Command {
       name: 'remove-no-experience-channel',
       description: "Remove no experience channel.",
       aliases: ['remove-no-experience-channel'],
+      category: 'admin',
 
       clientPermissions: PermissionFlagsBits.Administrator,
       memberPermissions: PermissionFlagsBits.Administrator,

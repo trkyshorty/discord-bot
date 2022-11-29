@@ -1,4 +1,4 @@
-const { Command, PermissionFlagsBits, ActivityType } = require('../../bot')
+const { Command, PermissionFlagsBits } = require('../../bot')
 
 class Leave extends Command {
   constructor(client) {
@@ -6,6 +6,7 @@ class Leave extends Command {
       name: 'leave',
       description: "Leave the music player from the voice channel",
       aliases: ['leave'],
+      category: 'music',
 
       clientPermissions: PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,
       memberPermissions: PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,

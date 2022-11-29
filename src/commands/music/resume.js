@@ -6,6 +6,7 @@ class Resume extends Command {
       name: 'resume',
       description: "Resume song in music player",
       aliases: ['resume'],
+      category: 'music',
 
       clientPermissions: PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,
       memberPermissions: PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,

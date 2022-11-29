@@ -7,6 +7,7 @@ class RemoveNoExperienceRole extends Command {
       name: 'remove-no-experience-role',
       description: "Remove no experience role.",
       aliases: ['remove-no-experience-role'],
+      category: 'admin',
 
       clientPermissions: PermissionFlagsBits.Administrator,
       memberPermissions: PermissionFlagsBits.Administrator,

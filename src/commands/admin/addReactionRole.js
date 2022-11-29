@@ -7,6 +7,7 @@ class AddReactionRole extends Command {
       name: 'add-reaction-role',
       description: "Add the reaction role for the server.",
       aliases: ['add-reaction-role'],
+      category: 'admin',
 
       clientPermissions: PermissionFlagsBits.Administrator | PermissionFlagsBits.ManageRoles,
       memberPermissions: PermissionFlagsBits.Administrator,

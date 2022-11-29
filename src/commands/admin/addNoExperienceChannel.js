@@ -7,6 +7,7 @@ class AddNoExperienceChannel extends Command {
       name: 'add-no-experience-channel',
       description: "Add no experience channel.",
       aliases: ['add-no-experience-channel'],
+      category: 'admin',
 
       clientPermissions: PermissionFlagsBits.Administrator,
       memberPermissions: PermissionFlagsBits.Administrator,

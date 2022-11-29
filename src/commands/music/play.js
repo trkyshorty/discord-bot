@@ -7,6 +7,7 @@ class Play extends Command {
       name: 'play',
       description: "Call a music player to voice channel",
       aliases: ['play', 'p'],
+      category: 'music',
 
       clientPermissions: PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,
       memberPermissions: PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,

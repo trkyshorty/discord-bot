@@ -6,6 +6,7 @@ class Pause extends Command {
       name: 'pause',
       description: "Pause the music player",
       aliases: ['pause', 'stop'],
+      category: 'music',
 
       clientPermissions: PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,
       memberPermissions: PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,
