@@ -5,11 +5,12 @@ class RemoveReactionRole extends Command {
   constructor(client) {
     super(client, {
       name: 'remove-reaction-role',
-      description: "Remove the reaction role for the server.",
+      description: 'Remove the reaction role for the server.',
       aliases: ['remove-reaction-role'],
       category: 'admin',
 
-      clientPermissions: PermissionFlagsBits.Administrator | PermissionFlagsBits.ManageRoles,
+      clientPermissions:
+        PermissionFlagsBits.Administrator | PermissionFlagsBits.ManageRoles,
       memberPermissions: PermissionFlagsBits.Administrator,
 
       args: [
@@ -35,24 +36,33 @@ class RemoveReactionRole extends Command {
     })
   }
 
-  async run (messageId, emoji, role) {
-
-    const guild = await Guild.findOneAndUpdate({ guild_id: this.interaction.guild.id }, {}, {
-      new: true,
-      upsert: true
-    }).catch((err) => this.logger.error(err))
+  async run(messageId, emoji, role) {
+    const guild = await Guild.findOneAndUpdate(
+      { guild_id: this.interaction.guild.id },
+      {},
+      {
+        new: true,
+        upsert: true,
+      }
+    ).catch((err) => this.logger.error(err))
 
     const index = guild.reaction_role.findIndex((x) => {
-      return x.message_id === messageId && x.emoji === emoji && x.role_id === role.id
+      return (
+        x.message_id === messageId && x.emoji === emoji && x.role_id === role.id
+      )
     })
 
     if (index !== -1) {
-      this.interaction.reply({
-        embeds: [{
-          title: `⛔ Reaction role doesnt not exist!`
-        }],
-        ephemeral: true
-      }).catch((err) => this.logger.error(err))
+      this.interaction
+        .reply({
+          embeds: [
+            {
+              title: `⛔ Reaction role doesnt not exist!`,
+            },
+          ],
+          ephemeral: true,
+        })
+        .catch((err) => this.logger.error(err))
     }
 
     guild.reaction_role.pull({
@@ -63,12 +73,16 @@ class RemoveReactionRole extends Command {
 
     await guild.save()
 
-    this.interaction.reply({
-      embeds: [{
-        title: `⛔ Reaction role removed!`
-      }],
-      ephemeral: true
-    }).catch((err) => this.logger.error(err))
+    this.interaction
+      .reply({
+        embeds: [
+          {
+            title: `⛔ Reaction role removed!`,
+          },
+        ],
+        ephemeral: true,
+      })
+      .catch((err) => this.logger.error(err))
   }
 }
 

@@ -4,7 +4,7 @@ class Ping extends Command {
   constructor(client) {
     super(client, {
       name: 'ping',
-      description: "Retrieve pong!",
+      description: 'Retrieve pong!',
       aliases: ['latency'],
       category: 'dev',
 
@@ -13,13 +13,17 @@ class Ping extends Command {
     })
   }
 
-  async run () {
-    this.interaction.reply({
-      embeds: [{
-        title: `⛔ Pong!`
-      }],
-      ephemeral: true
-    }).catch((err) => this.logger.error(err))
+  async run() {
+    this.interaction
+      .reply({
+        embeds: [
+          {
+            title: `⛔ Pong!`,
+          },
+        ],
+        ephemeral: true,
+      })
+      .catch((err) => this.logger.error(err))
   }
 }
 

@@ -7,7 +7,7 @@ class Rank extends Command {
   constructor(client) {
     super(client, {
       name: 'rank',
-      description: "Get user level",
+      description: 'Get user level',
       aliases: ['rank', 'level'],
       category: 'level',
 
@@ -25,7 +25,7 @@ class Rank extends Command {
     })
   }
 
-  async run (user) {
+  async run(user) {
     GuildMember.find({ guild_id: this.interaction.guild.id, user_id: user.id })
       .sort({ level: 'desc', exp: 'desc' })
       .then(async (guildMemberDocs) => {
@@ -34,12 +34,16 @@ class Rank extends Command {
         })
 
         if (userPosition === -1) {
-          return this.interaction.reply({
-            embeds: [{
-              title: `⛔ This user does not have a level yet!`
-            }],
-            ephemeral: true
-          }).catch((err) => this.logger.error(err))
+          return this.interaction
+            .reply({
+              embeds: [
+                {
+                  title: `⛔ This user does not have a level yet!`,
+                },
+              ],
+              ephemeral: true,
+            })
+            .catch((err) => this.logger.error(err))
         }
 
         const guildMember = await this.interaction.guild.members
@@ -56,7 +60,10 @@ class Rank extends Command {
         const rank = new canvacord.Rank()
           .setAvatar(user.displayAvatarURL({ format: 'jpg' }))
           .setCurrentXP(guildMemberDocs[userPosition].experience, defaultColor)
-          .setRequiredXP(guildMemberDocs[userPosition].level * 121, defaultColor)
+          .setRequiredXP(
+            guildMemberDocs[userPosition].level * 121,
+            defaultColor
+          )
           .setStatus(guildMember.presence.status)
           .setProgressBar(progressBarColor, 'COLOR')
           .setRank(userPosition + 1, '#')
@@ -64,13 +71,21 @@ class Rank extends Command {
           .setLevel(guildMemberDocs[userPosition].level, 'Level')
           .setLevelColor(defaultColor, defaultColor)
           .setUsername(user.username, defaultColor)
-          .setBackground('IMAGE', path.join(__dirname, '../../../resources/images/rank_background.png'))
+          .setBackground(
+            'IMAGE',
+            path.join(
+              __dirname,
+              '../../../resources/images/rank_background.png'
+            )
+          )
           .setOverlay(overlayColor, overlayOpacity)
           .setDiscriminator(user.discriminator, defaultColor)
 
         rank.build().then((data) => {
           const attachment = new AttachmentBuilder(data, '${user.id}.png')
-          this.interaction.reply({ files: [attachment] }).catch((err) => this.logger.error(err))
+          this.interaction
+            .reply({ files: [attachment] })
+            .catch((err) => this.logger.error(err))
         })
       })
       .catch((err) => this.logger.error(err))

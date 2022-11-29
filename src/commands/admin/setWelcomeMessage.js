@@ -5,7 +5,7 @@ class SetWelcomeMessage extends Command {
   constructor(client) {
     super(client, {
       name: 'set-welcome-message',
-      description: "Set the welcome messsage for the server.",
+      description: 'Set the welcome messsage for the server.',
       aliases: ['set-welcome-message'],
       category: 'admin',
 
@@ -23,25 +23,29 @@ class SetWelcomeMessage extends Command {
     })
   }
 
-  async run (message) {
+  async run(message) {
     const filter = { guild_id: this.interaction.guild.id }
-    const update = {  }
+    const update = {}
 
     const guild = await Guild.findOneAndUpdate(filter, update, {
       new: true,
-      upsert: true
+      upsert: true,
     }).catch((err) => this.logger.error(err))
 
     guild.welcome.message = message
 
     await guild.save()
 
-    this.interaction.reply({
-      embeds: [{
-        title: `⛔ Welcome message saved!`
-      }],
-      ephemeral: true
-    }).catch((err) => this.logger.error(err))
+    this.interaction
+      .reply({
+        embeds: [
+          {
+            title: `⛔ Welcome message saved!`,
+          },
+        ],
+        ephemeral: true,
+      })
+      .catch((err) => this.logger.error(err))
   }
 }
 

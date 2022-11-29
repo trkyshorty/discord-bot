@@ -4,7 +4,7 @@ class Purge extends Command {
   constructor(client) {
     super(client, {
       name: 'purge',
-      description: "Delete messages as given amount",
+      description: 'Delete messages as given amount',
       aliases: ['purge'],
       category: 'mod',
 
@@ -22,19 +22,24 @@ class Purge extends Command {
     })
   }
 
-  async run (amount) {
-    await this.interaction.channel.messages.fetch({ limit: amount })
-      .then(messages => {
+  async run(amount) {
+    await this.interaction.channel.messages
+      .fetch({ limit: amount })
+      .then((messages) => {
         this.interaction.channel.bulkDelete(messages, true)
       })
       .catch((err) => this.logger.error(err))
 
-    this.interaction.reply({
-      embeds: [{
-        description: `⛔ Deleted ${amount} messages`
-      }],
-      ephemeral: true
-    }).catch((err) => this.logger.error(err))
+    this.interaction
+      .reply({
+        embeds: [
+          {
+            description: `⛔ Deleted ${amount} messages`,
+          },
+        ],
+        ephemeral: true,
+      })
+      .catch((err) => this.logger.error(err))
   }
 }
 

@@ -5,11 +5,12 @@ class AddReactionRole extends Command {
   constructor(client) {
     super(client, {
       name: 'add-reaction-role',
-      description: "Add the reaction role for the server.",
+      description: 'Add the reaction role for the server.',
       aliases: ['add-reaction-role'],
       category: 'admin',
 
-      clientPermissions: PermissionFlagsBits.Administrator | PermissionFlagsBits.ManageRoles,
+      clientPermissions:
+        PermissionFlagsBits.Administrator | PermissionFlagsBits.ManageRoles,
       memberPermissions: PermissionFlagsBits.Administrator,
 
       args: [
@@ -35,24 +36,33 @@ class AddReactionRole extends Command {
     })
   }
 
-  async run (messageId, emoji, role) {
-
-    const guild = await Guild.findOneAndUpdate({ guild_id: this.interaction.guild.id }, {}, {
-      new: true,
-      upsert: true
-    }).catch((err) => this.logger.error(err))
+  async run(messageId, emoji, role) {
+    const guild = await Guild.findOneAndUpdate(
+      { guild_id: this.interaction.guild.id },
+      {},
+      {
+        new: true,
+        upsert: true,
+      }
+    ).catch((err) => this.logger.error(err))
 
     const index = guild.reaction_role.findIndex((x) => {
-      return x.message_id === messageId && x.emoji === emoji && x.role_id === role.id
+      return (
+        x.message_id === messageId && x.emoji === emoji && x.role_id === role.id
+      )
     })
 
     if (index !== -1) {
-      this.interaction.reply({
-        embeds: [{
-          title: `⛔ Reaction role already exist!`
-        }],
-        ephemeral: true
-      }).catch((err) => this.logger.error(err))
+      this.interaction
+        .reply({
+          embeds: [
+            {
+              title: `⛔ Reaction role already exist!`,
+            },
+          ],
+          ephemeral: true,
+        })
+        .catch((err) => this.logger.error(err))
     }
 
     guild.reaction_role.push({
@@ -63,12 +73,16 @@ class AddReactionRole extends Command {
 
     await guild.save()
 
-    this.interaction.reply({
-      embeds: [{
-        title: `⛔ Reaction role saved!`
-      }],
-      ephemeral: true
-    }).catch((err) => this.logger.error(err))
+    this.interaction
+      .reply({
+        embeds: [
+          {
+            title: `⛔ Reaction role saved!`,
+          },
+        ],
+        ephemeral: true,
+      })
+      .catch((err) => this.logger.error(err))
   }
 }
 

@@ -17,11 +17,13 @@ const {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  AttachmentBuilder
+  AttachmentBuilder,
 } = require('discord.js')
 const Event = require('./handlers/event')
 const Command = require('./handlers/command')
 const { Node } = require('lavaclient')
+const { load } = require('@lavaclient/spotify')
+
 require('@lavaclient/queue/register')
 
 class Bot extends Client {
@@ -42,7 +44,10 @@ class Bot extends Client {
       transports: [
         new winston.transports.Console({
           level: process.env.NODE_ENV === 'development' ? 'silly' : 'info',
-          format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
+          format: winston.format.combine(
+            winston.format.colorize(),
+            winston.format.simple()
+          ),
         }),
         new winston.transports.File({
           filename: './logs/error.log',
@@ -51,17 +56,24 @@ class Bot extends Client {
         }),
         new winston.transports.File({ filename: './logs/combined.log' }),
       ],
-      exceptionHandlers: [new winston.transports.File({ filename: './logs/exceptions.log' })],
+      exceptionHandlers: [
+        new winston.transports.File({ filename: './logs/exceptions.log' }),
+      ],
     })
   }
 
-  async connectDatabase () {
-    this.database = await mongoose.connect(process.env.MONGODB_URL)
-      .then(() => { this.emit('databaseReady') })
-      .catch((error) => { this.emit('databaseError', error) })
+  async connectDatabase() {
+    this.database = await mongoose
+      .connect(process.env.MONGODB_URL)
+      .then(() => {
+        this.emit('databaseReady')
+      })
+      .catch((error) => {
+        this.emit('databaseError', error)
+      })
   }
 
-  async buildCommands () {
+  async buildCommands() {
     try {
       const items = []
       items.push(...glob.sync(`${path.join(__dirname, './commands')}/**/*.js`))
@@ -75,11 +87,16 @@ class Bot extends Client {
         if (typeof command === 'function') command = new command(this)
         /* eslint-enable new-cap */
 
-        if (process.env.INSTANCE_TYPE === 'music'
-          && command.info.category !== 'music') return
+        if (
+          process.env.INSTANCE_TYPE === 'music' &&
+          command.info.category !== 'music'
+        )
+          return
 
         this.logger.info(
-          `[COMMAND] Load ${command.info.name} - ${command.info.aliases.join(', ')}`
+          `[COMMAND] Load ${command.info.name} - ${command.info.aliases.join(
+            ', '
+          )}`
         )
 
         this.commands.set(command.info.name, command)
@@ -92,13 +109,12 @@ class Bot extends Client {
       })
 
       await this.registerSlashCommands()
-
     } catch (error) {
       this.logger.error(error)
     }
   }
 
-  async registerSlashCommands () {
+  async registerSlashCommands() {
     const slashCommands = []
 
     this.commands.forEach((command) => {
@@ -181,7 +197,7 @@ class Bot extends Client {
       })
   }
 
-  async buildEvents () {
+  async buildEvents() {
     try {
       const items = []
       items.push(...glob.sync(`${path.join(__dirname, './events')}/**/*.js`))
@@ -206,31 +222,47 @@ class Bot extends Client {
     }
   }
 
-  async buildLavalink () {
+  async buildLavalink() {
     this.lavalink = new Node({
-      connection: { host: process.env.LAVALINK_HOST, port: process.env.LAVALINK_PORT, password: process.env.LAVALINK_PASSWORD },
+      connection: {
+        host: process.env.LAVALINK_HOST,
+        port: process.env.LAVALINK_PORT,
+        password: process.env.LAVALINK_PASSWORD,
+      },
       sendGatewayPayload: (id, payload) => {
         const guild = this.guilds.cache.get(id)
         if (guild) guild.shard.send(payload)
       },
-    }).on('connect', () => {
-      this.emit('lavalinkReady')
-    }).on('error', (error) => {
-      this.emit('lavalinkError', error)
     })
+      .on('connect', () => {
+        load({
+          client: {
+            id: process.env.SPOTIFY_CLIENT_ID,
+            secret: process.env.SPOTIFY_CLIENT_SECRET,
+          },
+          autoResolveYoutubeTracks: true,
+        })
+        this.emit('lavalinkReady')
+      })
+      .on('error', (error) => {
+        this.emit('lavalinkError', error)
+      })
 
-    this.ws.on('VOICE_SERVER_UPDATE', (data) => this.lavalink.handleVoiceUpdate(data))
-    this.ws.on('VOICE_STATE_UPDATE', (data) => this.lavalink.handleVoiceUpdate(data))
+    this.ws.on('VOICE_SERVER_UPDATE', (data) =>
+      this.lavalink.handleVoiceUpdate(data)
+    )
+    this.ws.on('VOICE_STATE_UPDATE', (data) =>
+      this.lavalink.handleVoiceUpdate(data)
+    )
 
     await this.connectLavalink()
   }
 
-  async connectLavalink () {
+  async connectLavalink() {
     await this.lavalink.connect(process.env.CLIENT_ID)
   }
 
-  async login (token) {
-
+  async login(token) {
     await this.buildCommands()
     await this.buildEvents()
     await this.buildLavalink()

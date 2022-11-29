@@ -5,7 +5,7 @@ class SetLevel extends Command {
   constructor(client) {
     super(client, {
       name: 'set-level',
-      description: "Set level to a user.",
+      description: 'Set level to a user.',
       aliases: ['set-level'],
       category: 'admin',
 
@@ -29,24 +29,32 @@ class SetLevel extends Command {
     })
   }
 
-  async run (user, level) {
+  async run(user, level) {
     const filter = { guild_id: this.interaction.guild.id, user_id: user.id }
     const update = { level: level, experience: 0 }
 
     await GuildMember.findOneAndUpdate(filter, update, {
       new: true,
-      upsert: true
+      upsert: true,
     }).catch((err) => this.logger.error(err))
 
-    this.client.emit("guildMemberLevelReward", this.interaction.member)
-    this.client.emit('guildMemberLevelNotification', this.interaction.member, level)
+    this.client.emit('guildMemberLevelReward', this.interaction.member)
+    this.client.emit(
+      'guildMemberLevelNotification',
+      this.interaction.member,
+      level
+    )
 
-    this.interaction.reply({
-      embeds: [{
-        title: `⛔ Level added!`
-      }],
-      ephemeral: true
-    }).catch((err) => this.logger.error(err))
+    this.interaction
+      .reply({
+        embeds: [
+          {
+            title: `⛔ Level added!`,
+          },
+        ],
+        ephemeral: true,
+      })
+      .catch((err) => this.logger.error(err))
   }
 }
 

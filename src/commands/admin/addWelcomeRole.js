@@ -5,7 +5,7 @@ class AddWelcomeRole extends Command {
   constructor(client) {
     super(client, {
       name: 'add-welcome-role',
-      description: "Add welcome role to a user.",
+      description: 'Add welcome role to a user.',
       aliases: ['add-welcome-level'],
       category: 'admin',
 
@@ -23,25 +23,29 @@ class AddWelcomeRole extends Command {
     })
   }
 
-  async run (role) {
+  async run(role) {
     const filter = { guild_id: this.interaction.guild.id }
     const update = {}
 
     const guild = await Guild.findOneAndUpdate(filter, update, {
       new: true,
-      upsert: true
+      upsert: true,
     }).catch((err) => this.logger.error(err))
 
     guild.welcome.roles.push(role.id)
 
     await guild.save()
 
-    this.interaction.reply({
-      embeds: [{
-        title: `⛔ Welcome role added!`
-      }],
-      ephemeral: true
-    }).catch((err) => this.logger.error(err))
+    this.interaction
+      .reply({
+        embeds: [
+          {
+            title: `⛔ Welcome role added!`,
+          },
+        ],
+        ephemeral: true,
+      })
+      .catch((err) => this.logger.error(err))
   }
 }
 
