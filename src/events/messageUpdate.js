@@ -39,7 +39,7 @@ class MessageUpdate extends Event {
               })}`
             )
             .setDescription(
-              `:pencil: ${oldMessage.author} owned message edited **[Message](https://discordapp.com/channels/${oldMessage.channel.guild.id}/${oldMessage.channel.id}/${oldMessage.id})**`
+              `:pencil: ${oldMessage.author} owned **[message](https://discordapp.com/channels/${oldMessage.channel.guild.id}/${oldMessage.channel.id}/${oldMessage.id})** edited`
             )
             .addFields(
               { name: 'Old Message', value: `${oldMessage.content}` },
