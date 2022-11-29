@@ -44,7 +44,7 @@ class AddLevelReward extends Command {
           title: `⛔ Level reward already exists!`
         }],
         ephemeral: true
-      }).catch((err) => this.logger.warn(err))
+      }).catch((err) => this.logger.error(err))
     }
 
     guild.level.rewards.push({
@@ -59,7 +59,7 @@ class AddLevelReward extends Command {
         title: `⛔ Level reward added!`
       }],
       ephemeral: true
-    }).catch((err) => this.logger.warn(err))
+    }).catch((err) => this.logger.error(err))
   }
 }
 
