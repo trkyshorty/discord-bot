@@ -12,6 +12,10 @@ const guildSchema = mongoose.Schema({
     no_experience_channels: [String],
   },
   log_channel: { type: String, default: '0' },
+  welcome: {
+    roles: [String],
+    message: String,
+  },
 })
 
 const Guild = mongoose.model('Guild', guildSchema)
