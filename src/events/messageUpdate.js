@@ -8,7 +8,7 @@ class MessageUpdate extends Event {
     })
   }
 
-  async run (oldMessage, newMessage) {
+  async run(oldMessage, newMessage) {
     //if (oldMessage.author.bot) return
     //if (oldMessage.partial) await oldMessage.fetch()
 
@@ -17,11 +17,12 @@ class MessageUpdate extends Event {
 
     const guild = await Guild.findOneAndUpdate(filter, update, {
       new: true,
-      upsert: true
+      upsert: true,
     }).catch((err) => this.logger.error(err))
 
     if (guild.log_channel != '0') {
-      this.client.channels.fetch(guild.log_channel)
+      this.client.channels
+        .fetch(guild.log_channel)
         .then(async (channel) => {
           const messageUpdateLog = new EmbedBuilder()
             .setColor('#0099ff')

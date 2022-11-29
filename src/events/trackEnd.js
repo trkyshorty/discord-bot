@@ -23,7 +23,12 @@ class TrackEnd extends Event {
     }
 
     this.client.user.setPresence({
-      activities: [{ name: `👀`, type: ActivityType.Watching }],
+      activities: [
+        {
+          name: `${process.env.DEFAULT_PRESENCE_NAME}`,
+          type: ActivityType.Watching,
+        },
+      ],
       status: 'online',
     })
   }

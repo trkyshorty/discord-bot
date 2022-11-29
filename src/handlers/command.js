@@ -17,9 +17,13 @@ class Command {
           this.info.clientPermissions
         )
       )
-        return interaction.reply('Bot is not authorized for this command.').catch((err) => this.logger.error(err))
+        return interaction
+          .reply('Bot is not authorized for this command.')
+          .catch((err) => this.logger.error(err))
       if (!interaction.member.permissions.has(this.info.memberPermissions))
-        return interaction.reply('You are not authorized for this command.').catch((err) => this.logger.error(err))
+        return interaction
+          .reply('You are not authorized for this command.')
+          .catch((err) => this.logger.error(err))
 
       if (!this.info.args || !this.info.args.length) return this.run()
 
@@ -28,7 +32,9 @@ class Command {
       this.info.args.forEach((arg) => {
         switch (arg.type) {
           case 'string':
-            args.push(interaction.options.getString(arg.name).replace(/\\n/g, "\n"))
+            args.push(
+              interaction.options.getString(arg.name).replace(/\\n/g, '\n')
+            )
             break
           case 'integer':
             args.push(interaction.options.getInteger(arg.name))

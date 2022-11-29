@@ -9,18 +9,18 @@ class GuildMemberRemove extends Event {
     })
   }
 
-  async run (member) {
-
+  async run(member) {
     const filter = { guild_id: member.guild.id }
     const update = {}
 
     const guild = await Guild.findOneAndUpdate(filter, update, {
       new: true,
-      upsert: true
+      upsert: true,
     })
 
     if (guild.log_channel != '0') {
-      this.client.channels.fetch(guild.log_channel)
+      this.client.channels
+        .fetch(guild.log_channel)
         .then(async (channel) => {
           const memberRemoveLog = new EmbedBuilder()
             .setColor('#FF0000')
@@ -40,7 +40,8 @@ class GuildMemberRemove extends Event {
           await channel
             .send({ embeds: [memberRemoveLog] })
             .catch((err) => this.logger.error(err))
-        }).catch((err) => this.logger.error(err))
+        })
+        .catch((err) => this.logger.error(err))
     }
   }
 }

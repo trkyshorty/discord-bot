@@ -9,11 +9,12 @@ class MessageReactionAdd extends Event {
     })
   }
 
-  async run (messageReaction, user) {
+  async run(messageReaction, user) {
     if (messageReaction.message.partial) await messageReaction.message.fetch()
 
-    const guild = await Guild.findOne({ guild_id: messageReaction.message.channel.guild.id })
-      .catch((err) => this.logger.error(err))
+    const guild = await Guild.findOne({
+      guild_id: messageReaction.message.channel.guild.id,
+    }).catch((err) => this.logger.error(err))
 
     if (!guild) return
 

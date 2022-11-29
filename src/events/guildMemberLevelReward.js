@@ -10,24 +10,25 @@ class GuildMemberLevelReward extends Event {
     })
   }
 
-  async run (member) {
-
+  async run(member) {
     const guild = await Guild.findOneAndUpdate(
       { guild_id: member.guild.id },
       {},
       {
         new: true,
-        upsert: true
-      }).catch((err) => this.logger.error(err))
+        upsert: true,
+      }
+    ).catch((err) => this.logger.error(err))
 
     const guildMember = await GuildMember.findOneAndUpdate(
       { guild_id: member.guild.id, user_id: member.user.id },
       {},
       {
         new: true,
-        upsert: true
-      }).catch((err) => this.logger.error(err))
-      
+        upsert: true,
+      }
+    ).catch((err) => this.logger.error(err))
+
     let rewardedRole
     guild.level.rewards.forEach((role) => {
       if (guildMember.level >= role.level) rewardedRole = role.role_id

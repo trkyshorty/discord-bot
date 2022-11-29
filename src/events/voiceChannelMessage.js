@@ -8,7 +8,7 @@ class GuildMessage extends Event {
     })
   }
 
-  async run (message) {
+  async run(message) {
     //if (message.author.bot) return
 
     if (!this.client.experienceCooldown.has(message.member.user.id)) {

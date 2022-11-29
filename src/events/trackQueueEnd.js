@@ -8,17 +8,15 @@ class TrackQueueEnd extends Event {
     })
   }
 
-  async run (interactionChannel) {
-    await interactionChannel.send(
-      {
-        embeds: [
-          {
-            description: `🎵 Queue ended`,
-          },
-        ],
-        ephemeral: false,
-      }
-    )
+  async run(interactionChannel) {
+    await interactionChannel.send({
+      embeds: [
+        {
+          description: `🎵 Queue ended`,
+        },
+      ],
+      ephemeral: false,
+    })
   }
 }
 

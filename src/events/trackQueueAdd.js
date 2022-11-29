@@ -9,14 +9,16 @@ class TrackQueueAdd extends Event {
   }
 
   async run(interaction, track) {
-    await interaction.reply({
-      embeds: [
-        {
-          description: `🎵 Queued : [${track.title}](${track.uri})`,
-        },
-      ],
-      ephemeral: false,
-    }).catch((err) => this.logger.error(err))
+    await interaction
+      .reply({
+        embeds: [
+          {
+            description: `🎵 Queued : [${track.title}](${track.uri})`,
+          },
+        ],
+        ephemeral: false,
+      })
+      .catch((err) => this.logger.error(err))
   }
 }
 

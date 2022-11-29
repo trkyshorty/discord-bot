@@ -8,7 +8,7 @@ class MessageCreate extends Event {
     })
   }
 
-  async run (message) {
+  async run(message) {
     //if (message.partial) await message.fetch()
     if (message.author.bot) return
 

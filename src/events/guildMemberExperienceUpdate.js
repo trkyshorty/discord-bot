@@ -9,29 +9,33 @@ class GuildMemberExperienceUpdate extends Event {
     })
   }
 
-  async run (member) {
-
+  async run(member) {
     const guildMember = await GuildMember.findOneAndUpdate(
       { guild_id: member.guild.id, user_id: member.user.id },
       {},
       {
         new: true,
-        upsert: true
-      }).catch((err) => this.logger.error(err))
+        upsert: true,
+      }
+    ).catch((err) => this.logger.error(err))
 
     const random = Math.floor(Math.random() * (75 - 45)) + 45
 
     if (guildMember.experience + random >= guildMember.level * 121) {
       guildMember.experience = 0
       guildMember.level = guildMember.level + 1
-      this.client.emit('guildMemberLevelNotification', member, guildMember.level)
+      this.client.emit(
+        'guildMemberLevelNotification',
+        member,
+        guildMember.level
+      )
     } else {
       guildMember.experience = guildMember.experience + random
     }
 
     guildMember.save()
 
-    this.client.emit("guildMemberLevelReward", member)
+    this.client.emit('guildMemberLevelReward', member)
   }
 }
 

@@ -14,7 +14,7 @@ class TrackStart extends Event {
     })
   }
 
-  async run (guild, track) {
+  async run(guild, track) {
     let player = this.client.players.get(guild.id)
     if (!player) return
 
@@ -60,7 +60,7 @@ class TrackStart extends Event {
       activities: [
         {
           name: `🎵 ${track.title}`,
-          type: ActivityType.Watching,
+          type: ActivityType.Custom,
           url: track.uri,
         },
       ],

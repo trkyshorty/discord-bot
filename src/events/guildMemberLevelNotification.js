@@ -8,7 +8,7 @@ class GuildMemberLevelNotification extends Event {
     })
   }
 
-  async run (member, level) {
+  async run(member, level) {
     member
       .send(
         `Tebrikler! Seviye **${level}** oldun. Sohbete daha çok katkı sağlayarak seviyeni yükseltebilir ve özel ayrıcalıklara sahip olabilirsin.`

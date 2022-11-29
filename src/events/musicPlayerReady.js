@@ -1,4 +1,4 @@
-const { Event, ActivityType } = require('../bot')
+const { Event } = require('../bot')
 
 class MusicPlayerReady extends Event {
   constructor(client) {
@@ -8,8 +8,8 @@ class MusicPlayerReady extends Event {
     })
   }
 
-  async run (player) {
-    console.log("[MUSIC] Player is ready for guild: " + player.guildId)
+  async run(player) {
+    console.log('[MUSIC] Player is ready for guild: ' + player.guildId)
   }
 }
 

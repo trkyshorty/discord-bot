@@ -8,7 +8,7 @@ class DirectMessage extends Event {
     })
   }
 
-  async run(message) {
+  async run() {
     //if (message.author.bot) return
   }
 }

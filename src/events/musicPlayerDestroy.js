@@ -8,7 +8,7 @@ class MusicPlayerDestroy extends Event {
     })
   }
 
-  async run (player) {
+  async run(player) {
     await player.disconnect()
 
     await player.queue.collector.stop()
@@ -25,11 +25,16 @@ class MusicPlayerDestroy extends Event {
     }
 
     this.client.user.setPresence({
-      activities: [{ name: `👀`, type: ActivityType.Watching }],
+      activities: [
+        {
+          name: `${process.env.DEFAULT_PRESENCE_NAME}`,
+          type: ActivityType.Watching,
+        },
+      ],
       status: 'online',
     })
 
-    console.log("[MUSIC] Player is destroyed for guild: " + player.guildId)
+    console.log('[MUSIC] Player is destroyed for guild: ' + player.guildId)
   }
 }
 

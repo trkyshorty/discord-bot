@@ -9,21 +9,26 @@ class GuildMessage extends Event {
     })
   }
 
-  async run (message) {
+  async run(message) {
     //if (message.author.bot) return
 
     if (!this.client.experienceCooldown.has(message.member.user.id)) {
-
       const filter = { guild_id: message.guild.id }
       const update = {}
 
       const guild = await Guild.findOneAndUpdate(filter, update, {
         new: true,
-        upsert: true
+        upsert: true,
       }).catch((err) => this.logger.error(err))
 
-      if (guild.level.no_experience_channels.includes(message.channel.id)) return
-      if (message.member.roles.cache.some((role) => guild.level.no_experience_roles.includes(role.id))) return
+      if (guild.level.no_experience_channels.includes(message.channel.id))
+        return
+      if (
+        message.member.roles.cache.some((role) =>
+          guild.level.no_experience_roles.includes(role.id)
+        )
+      )
+        return
 
       this.client.emit('guildMemberExperienceUpdate', message.member)
 

@@ -8,7 +8,7 @@ class VoiceStateUpdate extends Event {
     })
   }
 
-  async run (oldState, newState) {
+  async run(oldState, newState) {
     const oldChannel = oldState.channel
     const newChannel = newState.channel
     const member = oldState.guild.members.cache.get(oldState.id)
@@ -20,7 +20,7 @@ class VoiceStateUpdate extends Event {
       let player = this.client.players.get(oldState.guild.id)
 
       if (player) {
-        this.client.emit("musicPlayerDestroy", player)
+        this.client.emit('musicPlayerDestroy', player)
       }
     }
 
@@ -29,11 +29,12 @@ class VoiceStateUpdate extends Event {
 
     const guild = await Guild.findOneAndUpdate(filter, update, {
       new: true,
-      upsert: true
+      upsert: true,
     }).catch((err) => this.logger.error(err))
 
     if (guild.log_channel != '0') {
-      this.client.channels.fetch(guild.log_channel)
+      this.client.channels
+        .fetch(guild.log_channel)
         .then(async (channel) => {
           if (member) {
             const voiceStateUpdateLog = new EmbedBuilder()
