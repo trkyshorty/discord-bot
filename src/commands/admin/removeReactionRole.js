@@ -48,7 +48,7 @@ class RemoveReactionRole extends Command {
             title: `⛔ Reaction role doesnt not exist!`
           }],
           ephemeral: true
-        })
+        }).catch((err) => this.logger.error(err))
       }
 
       guild.reaction_role.pull({
@@ -65,7 +65,7 @@ class RemoveReactionRole extends Command {
         title: `⛔ Reaction role removed!`
       }],
       ephemeral: true
-    })
+    }).catch((err) => this.logger.error(err))
   }
 }
 

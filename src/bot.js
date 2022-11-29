@@ -1,6 +1,7 @@
 const glob = require('glob')
 const path = require('path')
 const mongoose = require('mongoose')
+const winston = require('winston')
 const {
   REST,
   Routes,
@@ -34,6 +35,24 @@ class Bot extends Client {
 
     this.database = null
     this.lavalink = null
+
+    this.logger = winston.createLogger({
+      format: winston.format.simple(),
+      handleExceptions: true,
+      transports: [
+        new winston.transports.Console({
+          level: process.env.NODE_ENV === 'development' ? 'silly' : 'info',
+          format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
+        }),
+        new winston.transports.File({
+          filename: './logs/error.log',
+          level: 'error',
+          handleExceptions: true,
+        }),
+        new winston.transports.File({ filename: './logs/combined.log' }),
+      ],
+      exceptionHandlers: [new winston.transports.File({ filename: './logs/exceptions.log' })],
+    })
   }
 
   async connectDatabase () {
@@ -59,7 +78,7 @@ class Bot extends Client {
         if (process.env.INSTANCE_TYPE === 'music'
           && command.info.category !== 'music') return
 
-        console.info(
+        this.logger.info(
           `[COMMAND] Load ${command.info.name} - ${command.info.aliases.join(', ')}`
         )
 
@@ -75,7 +94,7 @@ class Bot extends Client {
       await this.registerSlashCommands()
 
     } catch (error) {
-      console.error(error)
+      this.logger.error(error)
     }
   }
 
@@ -153,12 +172,12 @@ class Bot extends Client {
         body: slashCommands,
       })
       .then((data) =>
-        console.info(
+        this.logger.info(
           `[COMMAND] Successfully registered ${data.length} application commands`
         )
       )
       .catch((err) => {
-        console.error(err.message)
+        this.logger.error(err.message)
       })
   }
 
@@ -176,14 +195,14 @@ class Bot extends Client {
         if (typeof event === 'function') event = new event(this)
         /* eslint-enable new-cap */
 
-        console.info(`[EVENT] Load ${event.info.name}`)
+        this.logger.info(`[EVENT] Load ${event.info.name}`)
 
         this.on(event.info.name, async (...args) => {
           await event.execute(...args)
         })
       })
     } catch (error) {
-      console.error(error)
+      this.logger.error(error)
     }
   }
 

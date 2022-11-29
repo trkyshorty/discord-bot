@@ -38,7 +38,7 @@ class AddNoExperienceChannel extends Command {
           title: `⛔ No experience channel already exist!`
         }],
         ephemeral: true
-      })
+      }).catch((err) => this.logger.error(err))
     }
 
     guild.level.no_experience_channels.push(channel.id)
@@ -50,7 +50,7 @@ class AddNoExperienceChannel extends Command {
         title: `⛔ No experience channel added!`
       }],
       ephemeral: true
-    })
+    }).catch((err) => this.logger.error(err))
   }
 }
 

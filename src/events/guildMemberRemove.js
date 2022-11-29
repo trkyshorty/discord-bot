@@ -39,8 +39,8 @@ class GuildMemberRemove extends Event {
 
           await channel
             .send({ embeds: [memberRemoveLog] })
-            .catch((err) => console.error(err))
-        }).catch((err) => console.error(err))
+            .catch((err) => this.logger.error(err))
+        }).catch((err) => this.logger.error(err))
     }
   }
 }

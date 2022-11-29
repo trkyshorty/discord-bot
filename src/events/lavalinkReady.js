@@ -8,8 +8,8 @@ class LavalinkReady extends Event {
     })
   }
 
-  async run() {
-    console.info(`[LAVALINK] Connected`)
+  async run () {
+    this.logger.info(`[LAVALINK] Connected`)
   }
 }
 

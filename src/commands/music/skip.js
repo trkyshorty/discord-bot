@@ -20,7 +20,7 @@ class Skip extends Command {
           description: `⛔ Lavalink is not ready`
         }],
         ephemeral: true
-      })
+      }).catch((err) => this.logger.error(err))
     }
 
     let player = this.client.players.get(this.interaction.member.guild.id)
@@ -31,7 +31,7 @@ class Skip extends Command {
           description: `⛔ There is no music player in this guild`
         }],
         ephemeral: true
-      })
+      }).catch((err) => this.logger.error(err))
     }
 
     const voiceChannel = this.interaction.member.voice.channel
@@ -42,20 +42,20 @@ class Skip extends Command {
           description: `⛔ Music player is busy, you can listen on **${voiceChannel}** channel`
         }],
         ephemeral: true
-      })
+      }).catch((err) => this.logger.error(err))
     }
 
     await player.queue.start()
 
     if (this.interaction.isButton())
-      await this.interaction.deferUpdate().catch((err) => console.error(err))
+      await this.interaction.deferUpdate().catch((err) => this.logger.error(err))
     else {
       this.interaction.reply({
         embeds: [{
           description: `🎵 Music has been skipped`
         }],
         ephemeral: true
-      })
+      }).catch((err) => this.logger.error(err))
     }
 
   }

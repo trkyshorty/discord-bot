@@ -1,5 +1,6 @@
 const { Event } = require('../bot')
 const GuildMember = require('../models/guildMember')
+const Guild = require('../models/guild')
 
 class GuildMemberAdd extends Event {
   constructor(client) {
@@ -11,23 +12,36 @@ class GuildMemberAdd extends Event {
 
   async run (member) {
 
-    const filter = { guild_id: member.guild.id, user_id: member.user.id }
-    const update = { }
+    const guildMember = await GuildMember.findOneAndUpdate(
+      { guild_id: member.guild.id, user_id: member.user.id },
+      {},
+      {
+        new: true,
+        upsert: true
+      })
 
-    await GuildMember.findOneAndUpdate(filter, update, {
-      new: true,
-      upsert: true
-    })
+    const guild = await Guild.findOneAndUpdate(
+      { guild_id: member.guild.id },
+      {},
+      {
+        new: true,
+        upsert: true
+      })
 
-    member
-      .send(
-        `KOF topluluk sunucusuna hoş geldin ${member.user}, Sunucu içerisinde bazı kurallar var\n\n` +
-        `1) Diğer üyelere karşı saygılı olmalısın\n` +
-        `2) Saygı çerçevesini aşan yazı ve söylemlerden uzak durmalısın\n\n` +
-        `Bu kurallara dikkat ettiğin sürece discord içerisinde özgürce duygularını ifade edebilir, sohbetlerini gerçekleştirebilirsin.\n` +
-        `Aramıza hoş geldin!`
-      )
-      .catch((err) => console.error(err))
+    if (guild.welcome.message) {
+      member
+        .send(guild.welcome.message)
+        .catch((err) => this.logger.error(err))
+    }
+
+    if (guildMember.level == 1 && guildMember.experience == 0) {
+      if (guild.welcome.roles.length > 0) {
+        member.roles.add(guild.welcome.roles).catch((err) => this.logger.error(err))
+      }
+    } else {
+      this.client.emit("guildMemberLevelReward", member)
+    }
+
   }
 }
 

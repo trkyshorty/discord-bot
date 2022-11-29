@@ -39,12 +39,12 @@ class Rank extends Command {
               title: `⛔ This user does not have a level yet!`
             }],
             ephemeral: true
-          })
+          }).catch((err) => this.logger.error(err))
         }
 
         const guildMember = await this.interaction.guild.members
           .fetch({ user, force: true })
-          .catch((err) => console.error(err))
+          .catch((err) => this.logger.error(err))
 
         if (!guildMember) return
 
@@ -70,7 +70,7 @@ class Rank extends Command {
 
         rank.build().then((data) => {
           const attachment = new AttachmentBuilder(data, '${user.id}.png')
-          this.interaction.reply({ files: [attachment] })
+          this.interaction.reply({ files: [attachment] }).catch((err) => this.logger.error(err))
         })
       })
   }

@@ -19,7 +19,7 @@ class MusicPlayerDestroy extends Event {
     if (player.queue.nowPlayingMessage) {
       await player.queue.nowPlayingMessage
         .delete()
-        .catch((err) => console.error(err))
+        .catch((err) => this.logger.error(err))
 
       player.queue.nowPlayingMessage = null
     }

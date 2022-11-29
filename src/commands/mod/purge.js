@@ -27,14 +27,14 @@ class Purge extends Command {
       .then(messages => {
         this.interaction.channel.bulkDelete(messages, true)
       })
-      .catch((err) => console.error(err))
+      .catch((err) => this.logger.error(err))
 
     this.interaction.reply({
       embeds: [{
         description: `⛔ Deleted ${amount} messages`
       }],
       ephemeral: true
-    })
+    }).catch((err) => this.logger.error(err))
   }
 }
 

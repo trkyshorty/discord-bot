@@ -37,7 +37,7 @@ class SetLogChannel extends Command {
         title: `⛔ Log channel saved!`
       }],
       ephemeral: true
-    })
+    }).catch((err) => this.logger.error(err))
   }
 }
 

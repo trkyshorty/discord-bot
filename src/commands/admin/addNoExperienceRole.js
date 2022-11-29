@@ -38,7 +38,7 @@ class AddNoExperienceRole extends Command {
           title: `⛔ No experience role already exist!`
         }],
         ephemeral: true
-      })
+      }).catch((err) => this.logger.error(err))
     }
 
     guild.level.no_experience_roles.push(role.id)
@@ -50,7 +50,7 @@ class AddNoExperienceRole extends Command {
         title: `⛔ No experience role added!`
       }],
       ephemeral: true
-    })
+    }).catch((err) => this.logger.error(err))
   }
 }
 

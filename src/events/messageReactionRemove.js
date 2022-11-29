@@ -30,7 +30,7 @@ class MessageReactionRemove extends Event {
 
         member.roles
           .remove(reactionRole.role_id)
-          .catch((err) => console.error(err))
+          .catch((err) => this.logger.error(err))
       }
     )
   }

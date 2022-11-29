@@ -38,6 +38,7 @@ class SetLevel extends Command {
       upsert: true
     })
 
+    this.client.emit("guildMemberLevelReward", this.interaction.member)
     this.client.emit('guildMemberLevelNotification', this.interaction.member, level)
 
     this.interaction.reply({
@@ -45,7 +46,7 @@ class SetLevel extends Command {
         title: `⛔ Level added!`
       }],
       ephemeral: true
-    })
+    }).catch((err) => this.logger.error(err))
   }
 }
 

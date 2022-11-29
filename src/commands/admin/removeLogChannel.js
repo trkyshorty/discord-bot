@@ -28,7 +28,7 @@ class RemoveLogChannel extends Command {
         title: `⛔ Log channel removed!`
       }],
       ephemeral: true
-    })
+    }).catch((err) => this.logger.error(err))
   }
 }
 

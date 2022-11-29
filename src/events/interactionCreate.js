@@ -15,7 +15,7 @@ class InteractionCreate extends Event {
       if (!command) return
       command.execute(interaction)
     } catch (error) {
-      console.error(error)
+      this.logger.error(error)
     }
   }
 }

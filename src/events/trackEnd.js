@@ -8,13 +8,13 @@ class TrackEnd extends Event {
     })
   }
 
-  async run(guild, track) {
+  async run(guild) {
     let player = this.client.players.get(guild.id)
     if (!player) return
 
     await player.queue.nowPlayingMessage
       .delete()
-      .catch((err) => console.error(err))
+      .catch((err) => this.logger.error(err))
 
     player.queue.nowPlayingMessage = null
 

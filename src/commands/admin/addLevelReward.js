@@ -31,7 +31,7 @@ class AddLevelReward extends Command {
 
   async run (role, level) {
     const filter = { guild_id: this.interaction.guild.id }
-    const update = { }
+    const update = {}
 
     const guild = await Guild.findOneAndUpdate(filter, update, {
       new: true,
@@ -44,7 +44,7 @@ class AddLevelReward extends Command {
           title: `⛔ Level reward already exists!`
         }],
         ephemeral: true
-      })
+      }).catch((err) => this.logger.warn(err))
     }
 
     guild.level.rewards.push({
@@ -59,7 +59,7 @@ class AddLevelReward extends Command {
         title: `⛔ Level reward added!`
       }],
       ephemeral: true
-    })
+    }).catch((err) => this.logger.warn(err))
   }
 }
 

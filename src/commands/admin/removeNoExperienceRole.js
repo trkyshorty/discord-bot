@@ -38,7 +38,7 @@ class RemoveNoExperienceRole extends Command {
           title: `⛔ No experience role doesnt not exist!`
         }],
         ephemeral: true
-      })
+      }).catch((err) => this.logger.error(err))
     }
 
     guild.level.no_experience_roles.pull(role.id)
@@ -50,7 +50,7 @@ class RemoveNoExperienceRole extends Command {
         title: `⛔ No experience role removed!`
       }],
       ephemeral: true
-    })
+    }).catch((err) => this.logger.error(err))
   }
 }
 

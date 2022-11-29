@@ -38,7 +38,7 @@ class RemoveNoExperienceChannel extends Command {
           title: `⛔ No experience channel doesnt not exist!`
         }],
         ephemeral: true
-      })
+      }).catch((err) => this.logger.error(err))
     }
 
     guild.level.no_experience_channels.pull(channel.id)
@@ -50,7 +50,7 @@ class RemoveNoExperienceChannel extends Command {
         title: `⛔ No experience channel removed!`
       }],
       ephemeral: true
-    })
+    }).catch((err) => this.logger.error(err))
   }
 }
 

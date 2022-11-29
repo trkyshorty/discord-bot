@@ -48,7 +48,7 @@ class AddReactionRole extends Command {
             title: `⛔ Reaction role already exist!`
           }],
           ephemeral: true
-        })
+        }).catch((err) => this.logger.error(err))
       }
 
       guild.reaction_role.push({
@@ -65,7 +65,7 @@ class AddReactionRole extends Command {
         title: `⛔ Reaction role saved!`
       }],
       ephemeral: true
-    })
+    }).catch((err) => this.logger.error(err))
   }
 }
 

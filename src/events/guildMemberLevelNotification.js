@@ -13,7 +13,7 @@ class GuildMemberLevelNotification extends Event {
       .send(
         `Tebrikler! Seviye **${level}** oldun. Sohbete daha çok katkı sağlayarak seviyeni yükseltebilir ve özel ayrıcalıklara sahip olabilirsin.`
       )
-      .catch((err) => console.error(err))
+      .catch((err) => this.logger.error(err))
   }
 }
 

@@ -39,7 +39,7 @@ class Play extends Command {
           description: `⛔ Music player is busy, you can listen on **${voiceChannel}** channel`
         }],
         ephemeral: true
-      })
+      }).catch((err) => this.logger.error(err))
     }
 
     if (!voiceChannel) {
@@ -48,7 +48,7 @@ class Play extends Command {
           description: `⛔ You can't listen to music without entering the voice channel`
         }],
         ephemeral: true
-      })
+      }).catch((err) => this.logger.error(err))
     }
 
     let tracks = []
@@ -65,7 +65,7 @@ class Play extends Command {
             description: `⛔ Track not found or failed to load`
           }],
           ephemeral: true
-        })
+        }).catch((err) => this.logger.error(err))
       case 'PLAYLIST_LOADED':
         tracks = results.tracks
         this.interaction.reply({
@@ -74,7 +74,7 @@ class Play extends Command {
               }** songs queued`
           }],
           ephemeral: false
-        })
+        }).catch((err) => this.logger.error(err))
         break
     }
 
@@ -95,13 +95,13 @@ class Play extends Command {
 
       player.queue.collector.on('collect', async interaction => {
         try {
-          console.info(`[COLLECTOR] ${interaction.customId} button executed`)
+          this.logger.info(`[COLLECTOR] ${interaction.customId} button executed`)
 
           const command = this.client.commands.get(interaction.customId)
           if (command)
             command.execute(interaction)
         } catch (error) {
-          console.error(error)
+          this.logger.error(error)
         }
       })
 

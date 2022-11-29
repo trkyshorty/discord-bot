@@ -16,7 +16,7 @@ class TrackQueueAdd extends Event {
         },
       ],
       ephemeral: false,
-    })
+    }).catch((err) => this.logger.error(err))
   }
 }
 

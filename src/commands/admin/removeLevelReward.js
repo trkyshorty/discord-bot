@@ -44,7 +44,7 @@ class RemoveLevelReward extends Command {
           title: `⛔ Level reward doesnt not exist!`
         }],
         ephemeral: true
-      })
+      }).catch((err) => this.logger.error(err))
     }
 
     guild.level.rewards.pull({
@@ -59,7 +59,7 @@ class RemoveLevelReward extends Command {
         title: `⛔ Level reward removed!`
       }],
       ephemeral: true
-    })
+    }).catch((err) => this.logger.error(err))
   }
 }
 

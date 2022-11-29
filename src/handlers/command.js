@@ -3,11 +3,12 @@ class Command {
     Object.defineProperty(this, 'client', { value: client })
     this.info = info
     this.interaction = null
+    this.logger = client.logger
   }
 
   async execute(interaction) {
     try {
-      console.info(`[COMMAND] Execute ${this.info.name}`)
+      this.logger.info(`[COMMAND] Execute ${this.info.name}`)
 
       this.interaction = interaction
 
@@ -16,9 +17,9 @@ class Command {
           this.info.clientPermissions
         )
       )
-        return interaction.reply('Bot is not authorized for this command.')
+        return interaction.reply('Bot is not authorized for this command.').catch((err) => this.logger.error(err))
       if (!interaction.member.permissions.has(this.info.memberPermissions))
-        return interaction.reply('You are not authorized for this command.')
+        return interaction.reply('You are not authorized for this command.').catch((err) => this.logger.error(err))
 
       if (!this.info.args || !this.info.args.length) return this.run()
 
@@ -27,7 +28,7 @@ class Command {
       this.info.args.forEach((arg) => {
         switch (arg.type) {
           case 'string':
-            args.push(interaction.options.getString(arg.name))
+            args.push(interaction.options.getString(arg.name).replace(/\\n/g, "\n"))
             break
           case 'integer':
             args.push(interaction.options.getInteger(arg.name))
@@ -46,7 +47,7 @@ class Command {
 
       await this.run(...args)
     } catch (err) {
-      console.error(err)
+      this.logger.error(err)
     }
   }
 }

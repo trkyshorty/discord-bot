@@ -2,14 +2,15 @@ class Event {
   constructor(client, info) {
     Object.defineProperty(this, 'client', { value: client })
     this.info = info
+    this.logger = client.logger
   }
 
   async execute(...args) {
     try {
-      console.info(`[EVENT] Execute ${this.info.name}`)
+      this.logger.info(`[EVENT] Execute ${this.info.name}`)
       await this.run(...args)
     } catch (err) {
-      console.error(err)
+      this.logger.error(err)
     }
   }
 }

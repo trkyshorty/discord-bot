@@ -49,9 +49,9 @@ class MessageUpdate extends Event {
 
           channel
             .send({ embeds: [messageUpdateLog] })
-            .catch((err) => console.error(err))
+            .catch((err) => this.logger.error(err))
         })
-        .catch((err) => console.error(err))
+        .catch((err) => this.logger.error(err))
     }
   }
 }

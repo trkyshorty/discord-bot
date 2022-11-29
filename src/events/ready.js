@@ -9,7 +9,7 @@ class Ready extends Event {
   }
 
   async run () {
-    console.log(`[BOT] Logged in as ${this.client.user.tag}!`)
+    this.logger.info(`[BOT] Logged in as ${this.client.user.tag}!`)
 
     this.client.user.setPresence({
       activities: [{ name: `👀`, type: ActivityType.Watching }],

@@ -56,25 +56,25 @@ class VoiceStateUpdate extends Event {
               )
               channel
                 .send({ embeds: [voiceStateUpdateLog] })
-                .catch((err) => this.logger.warn(err))
+                .catch((err) => this.logger.error(err))
             } else if (oldChannel && newChannel) {
               voiceStateUpdateLog.setDescription(
                 `:microphone2: ${member.user} moved **${oldChannel}** to **${newChannel}**`
               )
               channel
                 .send({ embeds: [voiceStateUpdateLog] })
-                .catch((err) => this.logger.warn(err))
+                .catch((err) => this.logger.error(err))
             } else if (!newChannel) {
               voiceStateUpdateLog.setDescription(
                 `:microphone2: ${member.user} leaved **${oldChannel}**`
               )
               channel
                 .send({ embeds: [voiceStateUpdateLog] })
-                .catch((err) => this.logger.warn(err))
+                .catch((err) => this.logger.error(err))
             }
           }
         })
-        .catch((err) => console.error(err))
+        .catch((err) => this.logger.error(err))
     }
   }
 }

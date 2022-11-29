@@ -19,7 +19,7 @@ class Ping extends Command {
         title: `⛔ Pong!`
       }],
       ephemeral: true
-    })
+    }).catch((err) => this.logger.error(err))
   }
 }
 
