@@ -45,8 +45,6 @@ class GuildMemberLevelReward extends Event {
         })
         .catch((err) => this.logger.error(err))
     }
-
-    guildMember.save()
   }
 }
 
