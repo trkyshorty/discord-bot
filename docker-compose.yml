@@ -18,7 +18,7 @@ services:
     ports:
       - '${MONGODB_PORT}:${MONGODB_PORT}'
     volumes:
-      - dbdata:/data/db
+      - ./db:/data/db
     networks:
       - node-network
 
@@ -30,9 +30,6 @@ services:
       - .:/opt/Lavalink
     networks:
       - node-network
-
-volumes:
-  dbdata:
   
 networks:
   node-network:
