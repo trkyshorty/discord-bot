@@ -59,7 +59,7 @@ class TrackStart extends Event {
     this.client.user.setPresence({
       activities: [
         {
-          name: `🎵 ${track.title}`,
+          name: `${track.title}`,
           type: ActivityType.Listening,
           url: track.uri,
         },
