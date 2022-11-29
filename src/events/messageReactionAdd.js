@@ -9,30 +9,31 @@ class MessageReactionAdd extends Event {
     })
   }
 
-  async run(messageReaction, user) {
+  async run (messageReaction, user) {
     if (messageReaction.message.partial) await messageReaction.message.fetch()
 
-    Guild.findOne({ guild_id: messageReaction.message.channel.guild.id }).then(
-      (guild) => {
-        const reactionRole = guild.reaction_role.find((x) => {
-          return (
-            x.message_id === messageReaction.message.id &&
-            x.emoji === messageReaction.emoji.name
-          )
-        })
+    const guild = await Guild.findOne({ guild_id: messageReaction.message.channel.guild.id })
+      .catch((err) => this.logger.error(err))
 
-        if (!reactionRole) return
+    if (!guild) return
 
-        const member = messageReaction.message.channel.guild.members.cache.get(
-          user.id
-        )
-        if (!member) return
+    const reactionRole = guild.reaction_role.find((x) => {
+      return (
+        x.message_id === messageReaction.message.id &&
+        x.emoji === messageReaction.emoji.name
+      )
+    })
 
-        member.roles
-          .add(reactionRole.role_id)
-          .catch((err) => this.logger.error(err))
-      }
-    ).catch((err) => this.logger.error(err))
+    if (!reactionRole) return
+
+    const member = messageReaction.message.channel.guild.members.cache.get(
+      user.id
+    )
+    if (!member) return
+
+    member.roles
+      .add(reactionRole.role_id)
+      .catch((err) => this.logger.error(err))
   }
 }
 

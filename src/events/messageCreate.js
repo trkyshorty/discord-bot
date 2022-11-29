@@ -9,7 +9,7 @@ class MessageCreate extends Event {
   }
 
   async run (message) {
-    if (message.partial) await message.fetch()
+    //if (message.partial) await message.fetch()
     if (message.author.bot) return
 
     if (message.channel.type == ChannelType.GuildText)

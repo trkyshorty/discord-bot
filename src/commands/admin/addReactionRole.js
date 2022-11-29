@@ -37,28 +37,31 @@ class AddReactionRole extends Command {
 
   async run (messageId, emoji, role) {
 
-    Guild.findOne({ guild_id: this.interaction.guild.id }).then(async (guild) => {
-      const index = guild.reaction_role.findIndex((x) => {
-        return x.message_id === messageId && x.emoji === emoji && x.role_id === role.id
-      }).catch((err) => this.logger.error(err))
+    const guild = await Guild.findOneAndUpdate({ guild_id: this.interaction.guild.id }, {}, {
+      new: true,
+      upsert: true
+    }).catch((err) => this.logger.error(err))
 
-      if (index !== -1) {
-        this.interaction.reply({
-          embeds: [{
-            title: `⛔ Reaction role already exist!`
-          }],
-          ephemeral: true
-        }).catch((err) => this.logger.error(err))
-      }
-
-      guild.reaction_role.push({
-        message_id: messageId,
-        emoji: emoji,
-        role_id: role.id,
-      })
-
-      await guild.save()
+    const index = guild.reaction_role.findIndex((x) => {
+      return x.message_id === messageId && x.emoji === emoji && x.role_id === role.id
     })
+
+    if (index !== -1) {
+      this.interaction.reply({
+        embeds: [{
+          title: `⛔ Reaction role already exist!`
+        }],
+        ephemeral: true
+      }).catch((err) => this.logger.error(err))
+    }
+
+    guild.reaction_role.push({
+      message_id: messageId,
+      emoji: emoji,
+      role_id: role.id,
+    })
+
+    await guild.save()
 
     this.interaction.reply({
       embeds: [{
