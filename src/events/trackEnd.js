@@ -22,17 +22,17 @@ class TrackEnd extends Event {
   
         player.queue.nowPlayingMessage = null
       }
-    }
 
-    this.client.user.setPresence({
-      activities: [
-        {
-          name: `${process.env.DEFAULT_PRESENCE_NAME}`,
-          type: ActivityType.Watching,
-        },
-      ],
-      status: 'online',
-    })
+      this.client.user.setPresence({
+        activities: [
+          {
+            name: `${process.env.DEFAULT_PRESENCE_NAME}`,
+            type: ActivityType.Watching,
+          },
+        ],
+        status: 'online',
+      })
+    }
   }
 }
 
