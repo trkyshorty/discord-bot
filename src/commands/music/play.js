@@ -41,8 +41,6 @@ class Play extends Command {
 
     let player = this.client.players.get(this.interaction.member.guild.id)
 
-    this.interaction.deferReply()
-
     if (
       player &&
       player.queue.voiceChannel !== this.interaction.member.voice.channel
@@ -71,6 +69,8 @@ class Play extends Command {
         })
         .catch((err) => this.logger.error(err))
     }
+
+    this.interaction.deferReply().catch((err) => this.logger.error(err))
 
     if (this.client.lavalink.spotify.isSpotifyUrl(term))
       this.playWithSpotify(player, term)
