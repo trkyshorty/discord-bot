@@ -11,9 +11,9 @@ class Play extends Command {
       category: 'music',
 
       clientPermissions:
-        PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,
+        PermissionFlagsBits.Administrator | PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,
       memberPermissions:
-        PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,
+        PermissionFlagsBits.Connect | PermissionFlagsBits.Speak | PermissionFlagsBits.SendMessages,
 
       args: [
         {
@@ -93,7 +93,7 @@ class Play extends Command {
         break
       case SpotifyItemType.Artist:
         // Getting Artist Top Track
-        tracks = await results.resolveYoutubeTracks() 
+        tracks = await results.resolveYoutubeTracks()
         this.client.emit('trackQueueAdd', this.interaction, tracks.info)
         break
       case SpotifyItemType.Album:
@@ -104,11 +104,10 @@ class Play extends Command {
           .send({
             embeds: [
               {
-                description: `🎵 Queued **${
-                  tracks.length
-                } tracks** from ${SpotifyItemType[
-                  results.type
-                ].toLowerCase()} [**${results.name}**](${term}).`,
+                description: `🎵 Queued **${tracks.length
+                  } tracks** from ${SpotifyItemType[
+                    results.type
+                  ].toLowerCase()} [**${results.name}**](${term}).`,
               },
             ],
             ephemeral: false,

@@ -12,7 +12,7 @@ class Rank extends Command {
       category: 'level',
 
       clientPermissions: PermissionFlagsBits.Administrator,
-      memberPermissions: PermissionFlagsBits.Administrator,
+      memberPermissions: PermissionFlagsBits.SendMessages,
 
       args: [
         {

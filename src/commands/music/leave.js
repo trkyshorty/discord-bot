@@ -9,9 +9,9 @@ class Leave extends Command {
       category: 'music',
 
       clientPermissions:
-        PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,
+        PermissionFlagsBits.Administrator | PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,
       memberPermissions:
-        PermissionFlagsBits.Connect | PermissionFlagsBits.Speak,
+        PermissionFlagsBits.Connect | PermissionFlagsBits.Speak | PermissionFlagsBits.SendMessages,
     })
   }
 
