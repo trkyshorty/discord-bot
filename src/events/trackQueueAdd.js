@@ -9,8 +9,8 @@ class TrackQueueAdd extends Event {
   }
 
   async run(interaction, track) {
-    await interaction
-      .reply({
+    await interaction.channel
+      .send({
         embeds: [
           {
             description: `🎵 Queued : [${track.title}](${track.uri})`,

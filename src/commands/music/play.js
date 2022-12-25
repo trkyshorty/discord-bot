@@ -89,23 +89,19 @@ class Play extends Command {
 
           tracks = [track]
           this.client.emit('trackQueueAdd', this.interaction, track.info)
-
-          await this.interaction.deleteReply()
         }
         break
       case SpotifyItemType.Artist:
-        tracks = await results.resolveYoutubeTracks() // Getting Artist Top Track
-
+        // Getting Artist Top Track
+        tracks = await results.resolveYoutubeTracks() 
         this.client.emit('trackQueueAdd', this.interaction, tracks.info)
-
-        await this.interaction.deleteReply()
         break
       case SpotifyItemType.Album:
       case SpotifyItemType.Playlist:
         tracks = await results.resolveYoutubeTracks()
 
-        this.interaction
-          .editReply({
+        this.interaction.channel
+          .send({
             embeds: [
               {
                 description: `🎵 Queued **${
@@ -120,8 +116,8 @@ class Play extends Command {
           .catch((err) => this.logger.error(err))
         break
       default:
-        return this.interaction
-          .editReply({
+        return this.interaction.channel
+          .send({
             embeds: [
               {
                 description: `⛔ Track not found or failed to load`,
@@ -145,8 +141,8 @@ class Play extends Command {
     switch (results.loadType) {
       case 'LOAD_FAILED':
       case 'NO_MATCHES':
-        return this.interaction
-          .editReply({
+        return this.interaction.channel
+          .send({
             embeds: [
               {
                 description: `⛔ Track not found or failed to load`,
@@ -161,14 +157,12 @@ class Play extends Command {
           const [track] = results.tracks
           tracks = [track]
           this.client.emit('trackQueueAdd', this.interaction, track.info)
-
-          await this.interaction.deleteReply()
         }
         break
       case 'PLAYLIST_LOADED':
         tracks = results.tracks
-        this.interaction
-          .editReply({
+        this.interaction.channel
+          .send({
             embeds: [
               {
                 description: `🎵 Queued playlist [**${results.playlistInfo.name}**](${term}), it has a total of **${tracks.length}** tracks.`,
@@ -258,6 +252,8 @@ class Play extends Command {
     if (!started) {
       await player.queue.start()
     }
+
+    this.interaction.deleteReply().catch((err) => this.logger.error(err))
   }
 }
 
