@@ -18,7 +18,7 @@ class LeaderBoard extends Command {
     })
   }
 
-  async run(user) {
+  async run() {
     GuildMember.find({ guild_id: this.interaction.guild.id })
       .limit(10)
       .sort({ level: 'desc', experience: 'desc' })
@@ -43,7 +43,7 @@ class LeaderBoard extends Command {
             { name: 'Level', value: levels, inline: true },
             { name: 'Experience', value: xp, inline: true })
 
-        this.interaction.channel.send({ embeds: [embed] })
+        this.interaction.reply({ embeds: [embed] })
       })
       .catch((err) => this.logger.error(err))
   }
