@@ -44,6 +44,12 @@ class TrackStart extends Event {
           .setStyle(ButtonStyle.Primary)
       )
 
+    if (player.queue.nowPlayingMessage) {
+      await player.queue.nowPlayingMessage
+        .delete()
+        .catch((err) => this.logger.error(err))
+    }
+
     player.queue.nowPlayingMessage = await player.queue.interactionChannel.send(
       {
         embeds: [
