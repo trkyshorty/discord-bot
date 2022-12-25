@@ -20,7 +20,7 @@ class LeaderBoard extends Command {
 
   async run(user) {
     GuildMember.find({ guild_id: this.interaction.guild.id })
-      .limit(25)
+      .limit(10)
       .sort({ level: 'desc', experience: 'desc' })
       .then(async (guildMemberDocs) => {
 
@@ -37,7 +37,7 @@ class LeaderBoard extends Command {
 
         const embed = new EmbedBuilder()
           .setAuthor(
-            { name: `Leaderboard (Top 25)`, iconURL: this.interaction.guild.iconURL({ dynamic: true }) })
+            { name: `Leaderboard (Top 10)`, iconURL: this.interaction.guild.iconURL({ dynamic: true }) })
           .addFields(
             { name: 'Member', value: userNames, inline: true },
             { name: 'Level', value: levels, inline: true },
