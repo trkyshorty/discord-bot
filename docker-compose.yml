@@ -14,7 +14,7 @@ services:
     networks:
       - node-network
   mongodb:
-    image: mongo:5.0.14
+    image: mongo
     command: mongod --port ${MONGODB_PORT}
     ports:
       - '${MONGODB_PORT}:${MONGODB_PORT}'
