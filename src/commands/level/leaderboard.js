@@ -1,8 +1,5 @@
-const { Command, PermissionFlagsBits, AttachmentBuilder, EmbedBuilder } = require('../../bot')
+const { Command, PermissionFlagsBits, EmbedBuilder } = require('../../bot')
 const GuildMember = require('../../models/guildMember')
-const canvacord = require('canvacord')
-const path = require('path')
-
 class LeaderBoard extends Command {
   constructor(client) {
     super(client, {
