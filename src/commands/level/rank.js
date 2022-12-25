@@ -27,7 +27,7 @@ class Rank extends Command {
 
   async run(user) {
     GuildMember.find({ guild_id: this.interaction.guild.id, user_id: user.id })
-      .sort({ level: 'desc', exp: 'desc' })
+      .sort({ level: 'desc', experience: 'desc' })
       .then(async (guildMemberDocs) => {
         const userPosition = guildMemberDocs.findIndex((x) => {
           return x.user_id === user.id
