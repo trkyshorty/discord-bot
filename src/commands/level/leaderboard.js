@@ -20,6 +20,7 @@ class LeaderBoard extends Command {
 
   async run(user) {
     GuildMember.find({ guild_id: this.interaction.guild.id })
+      .limit(25)
       .sort({ level: 'desc', experience: 'desc' })
       .then(async (guildMemberDocs) => {
 
@@ -29,7 +30,7 @@ class LeaderBoard extends Command {
 
         await guildMemberDocs.forEach(async (guildMemberDoc) => {
           const user = (await this.client.users.fetch(guildMemberDoc.user_id))
-          userNames += `\`${user.username}#${user.discriminator}\`\n`
+          userNames += `\`${user.username}\`\n`
           levels += `\`${guildMemberDoc.level}\`\n`
           xp += `\`${guildMemberDoc.experience.toLocaleString('en')}\`\n`
         })
