@@ -19,7 +19,7 @@ services:
     ports:
       - '${MONGODB_PORT}:${MONGODB_PORT}'
     volumes:
-      - dbdata:/data/db
+      - mongodb:/data/db
     networks:
       - node-network
 
@@ -31,7 +31,10 @@ services:
       - .:/opt/Lavalink
     networks:
       - node-network
-  
+      
+volumes:
+  mongodb:
+
 networks:
   node-network:
     driver: bridge
