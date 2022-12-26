@@ -32,6 +32,19 @@ class AddWelcomeRole extends Command {
       upsert: true,
     }).catch((err) => this.logger.error(err))
 
+    if (guild.welcome.roles.includes(role.id)) {
+      return this.interaction
+        .reply({
+          embeds: [
+            {
+              title: `⛔ Welcome role already exist!`,
+            },
+          ],
+          ephemeral: true,
+        })
+        .catch((err) => this.logger.error(err))
+    }
+
     guild.welcome.roles.push(role.id)
 
     await guild.save()
