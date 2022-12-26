@@ -64,7 +64,7 @@ class Rank extends Command {
             guildMemberDocs[userPosition].level * 121,
             defaultColor
           )
-          .setStatus(guildMember.presence.status ? guildMember.presence.status : 'offline')
+          .setStatus(guildMember.presence ? guildMember.presence.status : 'offline')
           .setProgressBar(progressBarColor, 'COLOR')
           .setRank(userPosition + 1, '#')
           .setRankColor(defaultColor, defaultColor)
