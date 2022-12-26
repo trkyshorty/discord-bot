@@ -33,7 +33,7 @@ class Leave extends Command {
 
     if (!player) {
       return this.interaction
-        .editReply({
+        .reply({
           embeds: [
             {
               description: `⛔ There is no music player in this guild`,
@@ -48,10 +48,10 @@ class Leave extends Command {
 
     if (player.queue.voiceChannel !== voiceChannel) {
       return this.interaction
-        .editReply({
+        .reply({
           embeds: [
             {
-              description: `⛔ Music player is busy, you can listen on **${voiceChannel}** channel`,
+              description: `⛔ Music player is busy, you can listen on **${player.queue.voiceChannel}** channel`,
             },
           ],
           ephemeral: true,

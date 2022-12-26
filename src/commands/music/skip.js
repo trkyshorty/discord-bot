@@ -51,7 +51,7 @@ class Skip extends Command {
         .reply({
           embeds: [
             {
-              description: `⛔ Music player is busy, you can listen on **${voiceChannel}** channel`,
+              description: `⛔ Music player is busy, you can listen on **${player.queue.voiceChannel}** channel`,
             },
           ],
           ephemeral: true,

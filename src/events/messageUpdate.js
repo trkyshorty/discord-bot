@@ -9,7 +9,7 @@ class MessageUpdate extends Event {
   }
 
   async run(oldMessage, newMessage) {
-    //if (oldMessage.author.bot) return
+    if (oldMessage.author.bot) return
     if (oldMessage.partial) await oldMessage.fetch()
 
     const filter = { guild_id: oldMessage.channel.guild.id }
