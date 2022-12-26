@@ -42,6 +42,22 @@ yarn docker:dev
 yarn docker:prod
 ```
 
+Backup & Restore:
+
+```bash
+# run mongodump and create backup discord-bot collections
+docker exec -i <container-name> /usr/bin/mongodump --uri=mongodb://mongodb:27017/discord-bot --out /dump
+
+# Copy to backup output folder to host root directory
+docker cp <container-name>:/dump /root/dump
+
+# Copy to backup folder to new mongodb container
+docker cp /root/dump <container-name>:/dump
+
+# Restore backup
+docker exec -i <container-name> /usr/bin/mongorestore --uri=mongodb://mongodb:27017/discord-bot /dump/discord-bot
+```
+
 Linting:
 
 ```bash
