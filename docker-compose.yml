@@ -19,7 +19,7 @@ services:
     ports:
       - '${MONGODB_PORT}:${MONGODB_PORT}'
     volumes:
-      - ./db:/data/db
+      - ./dbdata:/data
     networks:
       - node-network
 
