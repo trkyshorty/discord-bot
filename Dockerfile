@@ -3,19 +3,22 @@ FROM node:slim
 RUN apt-get update
 RUN apt-get install git -y
 
-RUN mkdir -p /usr/src/discord-bot && chown -R root:root /usr/src/discord-bot
+RUN mkdir -p /usr/src/app/discord-bot && chown -R root:root /usr/src/app/discord-bot
 
 WORKDIR /usr/src/discord-bot
 
-COPY package.json yarn.lock ./
-
-RUN rm -rf /usr/src/discord-bot/node_modules
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package*.json ./
 
 USER root
 
-RUN yarn global add pm2
-RUN yarn install
+RUN npm install -g add pm2
+RUN npm install
 
-COPY --chown=root:root . .
+COPY . .
 
-EXPOSE 3000
+EXPOSE 4080
+
+CMD ["npm", "start"]
