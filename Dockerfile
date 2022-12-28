@@ -3,9 +3,7 @@ FROM node:slim
 RUN apt-get update
 RUN apt-get install git -y
 
-RUN mkdir -p /usr/src/app/discord-bot && chown -R root:root /usr/src/app/discord-bot
-
-WORKDIR /usr/src/discord-bot
+WORKDIR /usr/src/app/discord-bot
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
