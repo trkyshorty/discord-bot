@@ -1,21 +1,30 @@
-const { Command } = require('../../system');
+const { Command, PermissionFlagsBits } = require('../../bot')
 
-module.exports = class PingCommand extends Command {
+class Ping extends Command {
   constructor(client) {
     super(client, {
       name: 'ping',
+      description: 'Retrieve pong!',
       aliases: ['latency'],
+      category: 'dev',
 
-      clientPermissions: [],
-      userPermissions: [],
-      moderatorOnly: false,
-      ownerOnly: true,
-    });
+      clientPermissions: PermissionFlagsBits.Administrator,
+      memberPermissions: PermissionFlagsBits.Administrator,
+    })
   }
 
-  run(message) {
-    message.channel.send('Pinging...').then((sentMsg) => {
-      sentMsg.edit(`:ping_pong: Pong! Took \`${sentMsg.createdTimestamp - message.createdTimestamp}ms\``);
-    });
+  async run() {
+    this.interaction
+      .reply({
+        embeds: [
+          {
+            title: `⛔ Pong!`,
+          },
+        ],
+        ephemeral: true,
+      })
+      .catch((err) => this.logger.error(err))
   }
-};
+}
+
+module.exports = Ping

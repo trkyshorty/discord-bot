@@ -1,32 +1,41 @@
-const { Event } = require('../system');
+const { Event } = require('../bot')
+const Guild = require('../models/guild')
 
-class MessageReactionAddEvent extends Event {
+class MessageReactionAdd extends Event {
+  constructor(client) {
+    super(client, {
+      name: 'messageReactionAdd',
+      description: 'Mesage reaction add event',
+    })
+  }
+
   async run(messageReaction, user) {
-    if (messageReaction.message.partial) await messageReaction.message.fetch();
+    if (messageReaction.message.partial) await messageReaction.message.fetch()
 
-    const { models } = this.client.database;
+    const guild = await Guild.findOne({
+      guild_id: messageReaction.message.channel.guild.id,
+    }).catch((err) => this.logger.error(err))
 
-    models.Guild.findOne({ guild_id: messageReaction.message.channel.guild.id }).then((guildDoc) => {
-      const reactionRolePlugin = guildDoc.plugins.reaction_role;
+    if (!guild) return
 
-      const takeIndex = reactionRolePlugin.take.findIndex((x) => {
-        return x.channel_id === messageReaction.message.channel.id;
-      });
+    const reactionRole = guild.reaction_role.find((x) => {
+      return (
+        x.message_id === messageReaction.message.id &&
+        x.emoji === messageReaction.emoji.name
+      )
+    })
 
-      if (takeIndex === -1) return;
+    if (!reactionRole) return
 
-      const reaction = reactionRolePlugin.take.find((x) => {
-        const emojiMatch = x.emoji.match(/^<a:\w+:(\d+)>|<:\w+:(\d+)>?$/);
-        return (emojiMatch && emojiMatch[1] === messageReaction.emoji.id) || x.emoji === messageReaction.emoji.name;
-      });
+    const member = messageReaction.message.channel.guild.members.cache.get(
+      user.id
+    )
+    if (!member) return
 
-      if (reaction) {
-        const member = messageReaction.message.channel.guild.members.cache.get(user.id);
-        if (!member) return;
-        member.roles.add(reaction.role_id).catch((err) => this.logger.warn(err));
-      }
-    });
+    member.roles
+      .add(reactionRole.role_id)
+      .catch((err) => this.logger.error(err))
   }
 }
 
-module.exports = MessageReactionAddEvent;
+module.exports = MessageReactionAdd

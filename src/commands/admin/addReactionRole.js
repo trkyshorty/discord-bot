@@ -1,72 +1,89 @@
-const { Command } = require('../../system');
+const { Command, PermissionFlagsBits } = require('../../bot')
+const Guild = require('../../models/guild')
 
 class AddReactionRole extends Command {
   constructor(client) {
     super(client, {
       name: 'add-reaction-role',
+      description: 'Add the reaction role for the server.',
       aliases: ['add-reaction-role'],
+      category: 'admin',
 
-      clientPermissions: ['ADMINISTRATOR'],
-      userPermissions: ['ADMINISTRATOR'],
-      moderatorOnly: false,
-      ownerOnly: true,
+      clientPermissions:
+        PermissionFlagsBits.Administrator | PermissionFlagsBits.ManageRoles,
+      memberPermissions: PermissionFlagsBits.Administrator,
 
       args: [
         {
-          name: 'argType',
+          name: 'message_id',
+          description: 'Enter the Message ID',
           type: 'string',
+          required: true,
+        },
+        {
+          name: 'emoji',
+          description: 'Enter the Emoji',
+          type: 'string',
+          required: true,
         },
         {
           name: 'role',
+          description: 'Enter the Role ID',
           type: 'role',
-        },
-        {
-          name: 'argEmoji',
-          type: 'string',
+          required: true,
         },
       ],
-    });
+    })
   }
 
-  run(message, [argType, role, argEmoji]) {
-    if (!role) return message.reply('lütfen geçerli bir rol seçin');
-    const { models } = this.client.database;
-    models.Guild.findOne({ guild_id: message.guild.id })
-      .then(async (guildDoc) => {
-        if (argType === 'take') {
-          const takeIndex = guildDoc.plugins.reaction_role.take.findIndex((x) => {
-            return x.channel_id === message.channel.id && x.role_id === role.id && x.emoji === argEmoji;
-          });
+  async run(messageId, emoji, role) {
+    const guild = await Guild.findOneAndUpdate(
+      { guild_id: this.interaction.guild.id },
+      {},
+      {
+        new: true,
+        upsert: true,
+      }
+    ).catch((err) => this.logger.error(err))
 
-          if (takeIndex !== -1) return message.reply(`${role} zaten ekli`);
+    const index = guild.reaction_role.findIndex((x) => {
+      return (
+        x.message_id === messageId && x.emoji === emoji && x.role_id === role.id
+      )
+    })
 
-          guildDoc.plugins.reaction_role.take.push({
-            message_id: message.id,
-            channel_id: message.channel.id,
-            role_id: role.id,
-            emoji: argEmoji,
-          });
+    if (index !== -1) {
+      this.interaction
+        .reply({
+          embeds: [
+            {
+              title: `⛔ Reaction role already exist!`,
+            },
+          ],
+          ephemeral: true,
+        })
+        .catch((err) => this.logger.error(err))
+    }
 
-          guildDoc.save();
-        } else if (argType === 'give') {
-          const giveIndex = guildDoc.plugins.reaction_role.give.findIndex((x) => {
-            return x.channel_id === message.channel.id && x.role_id === role.id && x.emoji === argEmoji;
-          });
+    guild.reaction_role.push({
+      message_id: messageId,
+      emoji: emoji,
+      role_id: role.id,
+    })
 
-          if (giveIndex !== -1) return message.reply(`${role} zaten ekli`);
+    await guild.save()
 
-          guildDoc.plugins.reaction_role.give.push({
-            message_id: message.id,
-            channel_id: message.channel.id,
-            role_id: role.id,
-            emoji: argEmoji,
-          });
-
-          guildDoc.save();
-        }
+    this.interaction
+      .reply({
+        embeds: [
+          {
+            title: `⛔ Reaction role saved!`,
+          },
+        ],
+        ephemeral: true,
       })
-      .catch((err) => console.info(err));
+      .catch((err) => this.logger.error(err))
   }
 }
 
-module.exports = AddReactionRole;
+module.exports = AddReactionRole

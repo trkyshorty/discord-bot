@@ -1,42 +1,61 @@
-const { Command } = require('../../system');
+const { Command, PermissionFlagsBits } = require('../../bot')
+const GuildMember = require('../../models/guildMember')
 
-class SetBanTimeout extends Command {
+class SetLevel extends Command {
   constructor(client) {
     super(client, {
       name: 'set-level',
+      description: 'Set level to a user.',
       aliases: ['set-level'],
+      category: 'admin',
 
-      clientPermissions: ['ADMINISTRATOR'],
-      userPermissions: ['ADMINISTRATOR'],
-      moderatorOnly: false,
-      ownerOnly: true,
+      clientPermissions: PermissionFlagsBits.Administrator,
+      memberPermissions: PermissionFlagsBits.Administrator,
 
       args: [
         {
-          name: 'member',
+          name: 'user',
+          description: 'Enter the user',
           type: 'user',
+          required: true,
         },
         {
-          name: 'argLevel',
+          name: 'level',
+          description: 'Enter the level',
           type: 'integer',
+          required: true,
         },
       ],
-    });
+    })
   }
 
-  run(message, [member, argLevel]) {
-    if (!member) return message.reply('lütfen seviye verilecek birini etiketleyin');
-    if (!argLevel) return message.reply('lütfen bir seviye girin');
-    const { models } = this.client.database;
+  async run(user, level) {
+    const filter = { guild_id: this.interaction.guild.id, user_id: user.id }
+    const update = { level: level, experience: 0 }
 
-    models.GuildMember.findOneAndUpdate(
-      { guild_id: member.guild.id, user_id: member.user.id },
-      { $set: { exp: 0, level: argLevel } },
-      { upsert: true, new: true }
-    ).then(() => {
-      return message.reply(`${member} seviyesi ${argLevel} olarak değiştirildi`);
-    });
+    await GuildMember.findOneAndUpdate(filter, update, {
+      new: true,
+      upsert: true,
+    }).catch((err) => this.logger.error(err))
+
+    this.client.emit('guildMemberLevelReward', this.interaction.member)
+    this.client.emit(
+      'guildMemberLevelNotification',
+      this.interaction.member,
+      level
+    )
+
+    this.interaction
+      .reply({
+        embeds: [
+          {
+            title: `⛔ Level added!`,
+          },
+        ],
+        ephemeral: true,
+      })
+      .catch((err) => this.logger.error(err))
   }
 }
 
-module.exports = SetBanTimeout;
+module.exports = SetLevel
