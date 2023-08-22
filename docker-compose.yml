@@ -24,7 +24,7 @@ services:
       - node-network
 
   lavalink:
-    image: fredboat/lavalink:64632e6
+    image: fredboat/lavalink:d158f38
     ports:
       - '${LAVALINK_PORT}:${LAVALINK_PORT}'
     volumes:
