@@ -26,6 +26,10 @@
 - **Moderation**: Moderation features (!purge)
 - **Information**: For now it has only one feature (!avatar)
 
+## Discord
+
+[If you need help for KOF](https://discord.gg/5pBp2s2NUr)
+
 ## Requirements
 
 - Docker
