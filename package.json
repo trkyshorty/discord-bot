@@ -1,35 +1,30 @@
 {
   "name": "discord-bot",
-  "version": "1.0.0",
-  "description": "KOF Discord moderation bot",
+  "version": "3.0.0",
   "main": "index.js",
   "scripts": {
     "start": "pm2 start ecosystem.config.json --no-daemon",
     "dev": "cross-env NODE_ENV=development node -r dotenv/config ./index.js",
-    "docker:prod": "docker-compose -f docker-compose.yml -f docker-compose.prod.yml up",
-    "docker:dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint .",
-    "lint:fix": "eslint --fix .",
-    "prettier": "prettier --check ./src/**/*.js",
-    "prettier:fix": "prettier --write ./src/**/*.js"
+    "lint": "eslint index.js",
+    "lint:fix": "eslint --fix index.js",
+    "prettier": "prettier --check index.js",
+    "prettier:fix": "prettier --write index.js"
   },
-  "repository": "https://github.com/trkyshorty/discord-bot.git",
-  "author": "trkyshorty <trky.shorty@gmail.com>",
+  "author": "Shorty",
   "license": "MIT",
+  "description": "",
   "dependencies": {
-    "@lavaclient/queue": "^2.1.1",
-    "@lavaclient/spotify": "^3.1.0",
-    "canvacord": "^5.4.8",
-    "discord.js": "^14.6.0",
-    "dotenv": "^16.0.3",
-    "lavaclient": "^4.1.1",
-    "mongoose": "^6.11.3",
-    "winston": "^3.8.2"
+    "@discordjs/builders": "^1.9.0",
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3",
-    "eslint": "^8.28.0",
-    "prettier": "^2.8.0"
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.13.0",
+    "eslint": "^9.13.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.11.0",
+    "prettier": "^3.3.3"
   }
 }
