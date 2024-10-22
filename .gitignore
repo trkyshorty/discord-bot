@@ -134,8 +134,3 @@ dist
 .Trashes
 ehthumbs.db
 Thumbs.db
-
-# Custom files  #
-.env
-Lavalink.jar
-application.yml
