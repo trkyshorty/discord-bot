@@ -37,7 +37,7 @@ const client = new Client({
 
 const commands = [
   new SlashCommandBuilder()
-    .setName('set-mod')
+    .setName('ping')
     .setDescription('Replies with Pong!')
     .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator)
     .toJSON(),
